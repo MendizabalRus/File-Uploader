@@ -5,10 +5,10 @@ import { Outlet } from 'react-router';
 import '../style/AuthLayout.module.css';
 
 const AuthLayout = () => {
-    return(
-        <>
-            <Outlet />
-        </>
-    )
-}
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+};
 export default AuthLayout;

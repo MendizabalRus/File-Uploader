@@ -1,6 +1,6 @@
 import AuthLayout from './AuthLayout.jsx';
 import Register from './Register.jsx';
-import LogIn from './Register.jsx';
+import LogIn from './LogIn.jsx';
 
 import ProtectedRoute from './ProtectedRoute.jsx';
 import MainLayout from './MainLayout.jsx';

@@ -7,7 +7,3 @@ body {
 #root {
   min-height: 100vh;
 }
-
-body {
-  background: rgba(0, 0, 0, 0.8);
-}

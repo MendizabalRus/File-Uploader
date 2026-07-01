@@ -1,0 +1,67 @@
+.logIn {
+    display: flex;
+    flex-direction: row;
+
+    padding: 150px 200px;
+}
+
+.logInLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    padding: 20px 80px;
+    margin-right: 200px;
+}
+
+.logInForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.logInForm, * {
+    width: 100%;
+}
+
+input {
+    padding: 5px;
+
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+input:focus, input:hover {
+    outline: 1px solid rgb(17, 76, 255);
+
+    background-color: transparent;
+}
+
+input:valid {
+    outline: 1px solid rgb(7, 150, 7);
+
+    background-color: rgba(7, 150, 7, 0.4);
+}
+
+input:user-invalid {
+    outline: 1px solid rgb(155, 7, 7);
+
+    background-color: rgba(155, 7, 7, 0.4);
+}
+
+button {
+    padding: 5px;
+
+    border: 1px solid black;
+    border-radius: 5px;
+
+    background-color: transparent;
+
+    transition: background-color 500ms ease;
+}
+
+button:hover, button:active {
+    border: 1px solid rgb(17, 76, 255);
+
+    background-color: rgba(17, 76, 255, 0.4);
+}
