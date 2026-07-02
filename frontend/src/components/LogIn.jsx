@@ -14,7 +14,7 @@ const LogIn = () => {
 
     const data = Object.fromEntries(formData);
 
-    const response = await fetch('/api/log-in', {
+    const response = await fetch('http://localhost:8080/api/log-in', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -23,9 +23,9 @@ const LogIn = () => {
       body: JSON.stringify(data),
     });
 
-    const result = await response.json();
-
-    console.log(result);
+    console.log(response.status)
+    const text = await response.text();
+    console.log(text)
   };
 
   return (

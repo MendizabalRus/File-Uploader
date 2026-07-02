@@ -4,6 +4,11 @@ const bcrypt = require("bcryptjs");
 // files
 const { prisma } = require("../../lib/prisma.js");
 
+// Register form validation
+
+// Log in form validation
+
+
 const postRegister = async (req, res) => {
   try {
     const { firstname, lastname, email, password, confirmPassword } = req.body;
@@ -29,6 +34,13 @@ const postRegister = async (req, res) => {
   }
 };
 
+const postLogIn = async (req, res) => {
+  res.json({
+    message: "User logged in successfully",
+    user: req.user,
+  })
+}
+
 const postAuthMe = (req, res) => {
   if (req.isAuthenticated()) {
     return res.json({
@@ -44,5 +56,6 @@ const postAuthMe = (req, res) => {
 
 module.exports = {
   postRegister,
+  postLogIn,
   postAuthMe,
 };

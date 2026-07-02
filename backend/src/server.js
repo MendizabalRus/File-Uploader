@@ -2,7 +2,7 @@
 const express = require("express");
 const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
-const prisma = require("../generated/prisma/client");
+const { prisma } = require("../lib/prisma");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const path = require("node:path");
