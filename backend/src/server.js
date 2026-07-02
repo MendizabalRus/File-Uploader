@@ -1,10 +1,7 @@
 // packages
 const express = require("express");
 const session = require("express-session");
-const {
-  PrsimaSessionStore,
-  PrismaSessionStore,
-} = require("@quixo3/prisma-session-store");
+const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 const prisma = require("../prisma/client");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -14,10 +11,12 @@ const bcrypt = require("bcryptjs");
 
 //passport config
 passport.use(
-  new LocalStrategy(async (username, password, done) => {
+  new LocalStrategy(
+    { usernameField: email},
+    async (email, password, done) => {
     try {
       const user = await prisma.user.findUnique({
-        where: { username },
+        where: { email },
       });
 
       if (!user) {
@@ -92,7 +91,7 @@ app.get("/api/auth/me", (req, res) => {
 
   res.json({
     authenticated: false,
-  })
+  });
 });
 
 // server

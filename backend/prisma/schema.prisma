@@ -12,17 +12,29 @@ datasource db {
   provider = "postgresql"
 }
 
-model User { 
-  id    Int     @id @default(autoincrement()) 
-  email String  @unique
-  name  String?
-  posts Post[]
-} 
-model Post { 
-  id        Int     @id @default(autoincrement()) 
-  title     String
-  content   String?
-  published Boolean @default(false) 
-  author    User    @relation(fields: [authorId], references: [id]) 
-  authorId  Int
-} 
+model User {
+  id        Int    @id @default(autoincrement())
+  firstname String
+  lastname  String
+  email     String @unique
+  password  String
+  posts     File[]
+}
+
+model File {
+  id         Int      @id @default(autoincrement())
+  name       String
+  path       String
+  size       Int
+  mimeType   String
+  uploadedAt DateTime @default(now())
+
+  ownerId Int
+  owner   User @relation(fields: [ownerId], references: [id])
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  expiresAt DateTime
+}
