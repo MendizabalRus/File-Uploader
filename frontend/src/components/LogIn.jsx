@@ -6,6 +6,7 @@ import style from '../style/LogIn.module.css';
 
 // files
 
+
 const LogIn = () => {
   return (
     <div className={style.logIn}>
@@ -35,7 +36,7 @@ const LogIn = () => {
           now!
         </p>
       </div>
-      <img src="" alt="Log in image" />
+      <img src="" alt="Log in page image" />
     </div>
   );
 };
