@@ -83,7 +83,7 @@ const Register = () => {
           Already have an account? <Link to={'/log-in'}>Log in</Link> now!
         </p>
       </div>
-      <img src="" alt="Register image" />
+      <img src="null" alt="Register image" />
     </div>
   );
 };

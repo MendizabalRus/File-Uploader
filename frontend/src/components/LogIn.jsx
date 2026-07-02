@@ -54,7 +54,7 @@ const LogIn = () => {
           now!
         </p>
       </div>
-      <img src="" alt="Log in page image" />
+      <img src="null" alt="Log in page image" />
     </div>
   );
 };

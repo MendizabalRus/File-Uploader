@@ -1,4 +1,8 @@
+// packages
 import { createContext, useContext, useEffect, useState } from "react";
+
+// files
+import { meRequest, loginRequest, logoutRequest } from "../api/auth.js";
 
 const AuthContext = createContext();
 
@@ -10,9 +14,7 @@ export const AuthProvider = ({ children }) => {
   // Check authentication state
   const checkAuth = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/me", {
-        credentials: "include",
-      });
+      const response = await meRequest();
 
       const data = await response.json();
 
@@ -30,14 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   // Log in proccess
   const login = async (credentials) => {
-    const response = await fetch("http://localhost:8080/api/log-in", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
+    const response = await loginRequest(credentials);
 
     if (!response.ok) {
       throw new Error("Login failed");
@@ -50,10 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   // Log out proccess
   const logout = async () => {
-    const response = await fetch("http://localhost:8080/api/log-out", {
-      method: "POST",
-      credentials: "include",
-    });
+    const response = await logoutRequest();
 
     if (!response.ok) {
       throw new Error("Logout failed");
@@ -64,6 +56,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line 
     checkAuth();
   }, []);
 
@@ -82,5 +75,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
+// eslint-disable-next-line 
 export const useAuth = () => useContext(AuthContext);

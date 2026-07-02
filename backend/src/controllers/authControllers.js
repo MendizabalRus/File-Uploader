@@ -41,6 +41,7 @@ const postLogIn = async (req, res, next) => {
 };
 
 const postLogOut = (req, res, next) => {
+  console.log("logout from backend")
   req.logout((err) => {
     if (err) return next(err);
 
