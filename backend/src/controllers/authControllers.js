@@ -8,7 +8,6 @@ const { prisma } = require("../../lib/prisma.js");
 
 // Log in form validation
 
-
 const postRegister = async (req, res) => {
   try {
     const { firstname, lastname, email, password, confirmPassword } = req.body;
@@ -34,14 +33,30 @@ const postRegister = async (req, res) => {
   }
 };
 
-const postLogIn = async (req, res) => {
+const postLogIn = async (req, res, next) => {
   res.json({
     message: "User logged in successfully",
     user: req.user,
-  })
-}
+  });
+};
 
-const postAuthMe = (req, res) => {
+const postLogOut = (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+
+    req.session.destroy((err) => {
+      if (err) return next(err);
+
+      res.clearCookie("connect.sid");
+
+      res.json({
+        message: "Logged out successfully",
+      });
+    });
+  });
+};
+
+const getAuthMe = (req, res) => {
   if (req.isAuthenticated()) {
     return res.json({
       authenticated: true,
@@ -57,5 +72,6 @@ const postAuthMe = (req, res) => {
 module.exports = {
   postRegister,
   postLogIn,
-  postAuthMe,
+  postLogOut,
+  getAuthMe,
 };
