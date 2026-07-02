@@ -7,11 +7,32 @@ import style from '../style/Register.module.css';
 // files
 
 const Register = () => {
+  const handleRegistration= async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target)
+
+    const data = Object.fromEntries(formData);
+
+    const response = await fetch("http://localhost:8080/api/register", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+
+    const result = await response.json();
+
+    console.log(result);
+  }
+
   return (
     <div className={style.register}>
       <div className={style.registerLeft}>
         <h1>Register</h1>
-        <form action="" method="POST" className={style.registerForm}>
+        <form onSubmit={handleRegistration} className={style.registerForm}>
           <label>
             <input
               type="text"
@@ -25,14 +46,6 @@ const Register = () => {
               type="text"
               name="lastname"
               placeholder="Last Name"
-              required
-            />
-          </label>
-          <label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Username"
               required
             />
           </label>

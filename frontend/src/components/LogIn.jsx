@@ -6,18 +6,38 @@ import style from '../style/LogIn.module.css';
 
 // files
 
-
 const LogIn = () => {
+  const handleLogIn = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const data = Object.fromEntries(formData);
+
+    const response = await fetch('/api/log-in', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    console.log(result);
+  };
+
   return (
     <div className={style.logIn}>
       <div className={style.logInLeft}>
         <h1>Log In</h1>
-        <form action="" method="POST" className={style.logInForm}>
+        <form onSubmit={handleLogIn} className={style.logInForm}>
           <label>
             <input
-              type="text"
-              name="username"
-              placeholder="username"
+              type="email"
+              name="email"
+              placeholder="example@email.com"
               required
             />
           </label>
