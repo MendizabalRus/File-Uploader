@@ -1,12 +1,16 @@
 // react & packages
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 // style
 import style from '../style/LogIn.module.css';
 
 // files
+import { useAuth } from "./AuthContext"
 
 const LogIn = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
   const handleLogIn = async (e) => {
     e.preventDefault();
 
@@ -14,18 +18,12 @@ const LogIn = () => {
 
     const data = Object.fromEntries(formData);
 
-    const response = await fetch('http://localhost:8080/api/log-in', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    console.log(response.status)
-    const text = await response.text();
-    console.log(text)
+    try {
+      await login(data);
+      navigate("/")
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

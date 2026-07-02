@@ -1,21 +1,20 @@
 // react & packages
-
+import { useNavigate } from 'react-router';
 
 // style
 import style from '../style/Header.module.css';
 
 // files
+import { useAuth } from './AuthContext';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
   const handleLogOut = async () => {
-    const response = fetch('http://localhost:8080/api/log-out', {
-      method: 'POST',
-      credentials: 'include',
-    });
+    await logout();
 
-    const data = await response.json();
-
-    console.log(data);
+    navigate('/log-in');
   };
 
   return (

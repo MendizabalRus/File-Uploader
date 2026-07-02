@@ -1,37 +1,18 @@
 // react & packages
 import { Outlet, Navigate } from 'react-router';
-import { useState, useEffect } from 'react';
+import { useAuth } from "./AuthContext"
 
 // style
 
 // files
 
 const ProtectedRoute = () => {
-  const [authenticated, setAuthenticated] = useState(null);
+  const { loading, authenticated } = useAuth();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/auth/me", {
-          credentials: "include",
-        });
-
-        const data = await response.json();
-
-        setAuthenticated(data.authenticated)
-      } catch (err) {
-        console.error(err)
-        setAuthenticated(false)
-      }
-    }
-
-    checkAuth();
-  }, [])
-
-  if (authenticated === null) {
+  if (loading) {
     return <p>Loading...</p>;
   }
 
-  return authenticated ? <Outlet /> : <Navigate to="/log-in" replace/>;
+  return authenticated ? <Outlet /> : <Navigate to="/log-in" replace />;
 };
 export default ProtectedRoute;
