@@ -2,38 +2,43 @@
 const express = require("express");
 const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
-const prisma = require("../prisma/client");
+const prisma = require("../generated/prisma/client");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const path = require("node:path");
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const bcrypt = require("bcryptjs");
+const cors = require("cors");
+
+// files
+const authRoutes = require("./routes/authRoutes.js");
 
 //passport config
 passport.use(
   new LocalStrategy(
-    { usernameField: email},
+    { usernameField: "email" },
     async (email, password, done) => {
-    try {
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
+      try {
+        const user = await prisma.user.findUnique({
+          where: { email },
+        });
 
-      if (!user) {
-        return done(null, false, { message: "User not found" });
+        if (!user) {
+          return done(null, false, { message: "User not found" });
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+          return done(null, false, { message: "Incorrect password" });
+        }
+
+        return done(null, user);
+      } catch (err) {
+        return done(err);
       }
-
-      const match = await bcrypt.compare(password, user.password);
-
-      if (!match) {
-        return done(null, false, { message: "Incorrect password" });
-      }
-
-      return done(null, user);
-    } catch (err) {
-      return done(err);
-    }
-  }),
+    },
+  ),
 );
 
 // serialize the user
@@ -80,19 +85,19 @@ app.use(
 // initialise passport
 app.use(passport.session());
 
-//endpoint to let the web know if user is logged in or not
-app.get("/api/auth/me", (req, res) => {
-  if (req.isAuthenticated()) {
-    return res.json({
-      authenticated: true,
-      user: req.user,
-    });
-  }
+// config cors
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
-  res.json({
-    authenticated: false,
-  });
-});
+// let express read json
+app.use(express.json());
+
+// redirect /api petitions to authentication routes (then to authenitcation controllers)
+app.use("/api", authRoutes);
 
 // server
 app.listen(8080, (err) => {
