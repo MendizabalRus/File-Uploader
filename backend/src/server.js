@@ -104,5 +104,5 @@ app.use("/api", authRoutes);
 // server
 app.listen(8080, (err) => {
   if (err) throw err;
-  console.log("Server initialised - http://localhost:8080");
+  console.log("\x1b[36m", "Server initialised - http://localhost:8080");
 });

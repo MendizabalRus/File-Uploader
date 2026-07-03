@@ -7,6 +7,9 @@ import style from '../style/PasswordInput.module.css';
 // files
 import passwordVisibleSvg from '../assets/passwordVisible.svg';
 import passwordHiddenSvg from '../assets/passwordHidden.svg';
+import tickSvg from '../assets/tick.svg';
+import crossSvg from '../assets/cross.svg';
+
 
 const PasswordInput = ({
   placeholder,
@@ -14,11 +17,10 @@ const PasswordInput = ({
   value,
   onChange,
   required = true,
-  minLength = 8,
-  maxLength = 30,
   showStrength = false,
+  format = '[^A-Za-z0-9]{8,30}',
 }) => {
-  const [isFocused, setIsFocused] = useState(false);  
+  const [isFocused, setIsFocused] = useState(false);
   const [visible, setVisible] = useState(false);
   // const [password, setPassword] = useState(''); -> Needs to be declared at the parent component so the password can later be read by the actual form that will be sent to the backend!
 
@@ -91,14 +93,13 @@ const PasswordInput = ({
       <div className={style.passwordCont}>
         <input
           type={passwordConfig.type}
-          maxLength={maxLength}
-          minLength={minLength}
           placeholder={placeholder}
           name={name}
+          format={format}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setIsFocused(true)}
           required={required}
-          onClick={() => setIsFocused(true)}
         />
         <img
           src={passwordConfig.src}
@@ -107,34 +108,34 @@ const PasswordInput = ({
           className={style.passwordVisibilitySvg}
         />
       </div>
-      {(isFocused && showStrength) && (
-        <>
-          <div className={style.passwordStrengthCont}>
-            <div
-              style={{
-                width: currStrength.width,
-                backgroundColor: currStrength.color,
-              }}
-              className={style.passwordStrengthBar}
-            ></div>
-          </div>
-          <p style={{ color: currStrength.color }}>
-            Password strenght: {currStrength.text}
-          </p>
-          <ul>
-            {passwordRequirements.map((requirement) => {
-              return <li
+      <div
+        className={`${style.strengthAndRequirements} ${isFocused && showStrength ? style.visible : style.hidden}`}
+      >
+        <div className={style.passwordStrengthCont}>
+          <div
+            style={{
+              width: currStrength.width,
+              backgroundColor: currStrength.color,
+            }}
+            className={style.passwordStrengthBar}
+          ></div>
+        </div>
+        <p style={{ color: currStrength.color }}>
+          Password strenght: {currStrength.text}
+        </p>
+        <ul className={style.passwordRequirements}>
+          {passwordRequirements.map((requirement) => {
+            return (
+              <li
                 key={requirement.text}
-                className={
-                  requirement.valid ? style.valid : style.invalid
-                }
+                className={requirement.valid ? style.valid : style.invalid}
               >
-                {requirement.text}
-              </li>;
-            })}
-          </ul>
-        </>
-      )}
+                <img src={requirement.valid? tickSvg : crossSvg} alt={requirement.valid? "Tick icon" : "Cross icon"} className={`${style.requirementIcon} ${requirement.valid ? style.tickSvg : style.crossSvg}`} />{requirement.text}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </>
   );
 };
