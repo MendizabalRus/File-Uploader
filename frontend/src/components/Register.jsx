@@ -1,32 +1,37 @@
 // react & packages
+import { useState } from 'react';
 import { Link } from 'react-router';
 
 // style
 import style from '../style/Register.module.css';
 
 // files
+import PasswordInput from "./PasswordInput.jsx";
 
 const Register = () => {
-  const handleRegistration= async (e) => {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleRegistration = async (e) => {
     e.preventDefault();
-    
-    const formData = new FormData(e.target)
+
+    const formData = new FormData(e.target);
 
     const data = Object.fromEntries(formData);
 
-    const response = await fetch("http://localhost:8080/api/register", {
-      method: "POST",
-      credentials: "include",
+    const response = await fetch('http://localhost:8080/api/register', {
+      method: 'POST',
+      credentials: 'include',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    })
+    });
 
     const result = await response.json();
 
     console.log(result);
-  }
+  };
 
   return (
     <div className={style.register}>
@@ -57,26 +62,8 @@ const Register = () => {
               required
             />
           </label>
-          <label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              minLength={8}
-              maxLength={30}
-              required
-            />
-          </label>
-          <label>
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm password"
-              minLength={8}
-              maxLength={30}
-              required
-            />
-          </label>
+          <PasswordInput name="password" placholder="Password" value={password} onChange={setPassword} showStrength />
+          <PasswordInput name="confirmPassword" placeholder="Confirm password" value={confirmPassword} onChange={setConfirmPassword} />
           <button type="submit">Register</button>
         </form>
         <p>

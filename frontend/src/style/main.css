@@ -8,3 +8,8 @@ body {
   display: flex;
   min-height: 100vh;
 }
+
+body {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+}

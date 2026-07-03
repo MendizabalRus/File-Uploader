@@ -1,14 +1,18 @@
 // react & packages
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 
 // style
 import style from '../style/LogIn.module.css';
 
 // files
-import { useAuth } from "./AuthContext"
+import { useAuth } from './AuthContext';
+import PasswordInput from './PasswordInput.jsx';
 
 const LogIn = () => {
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
   const { login } = useAuth();
 
   const handleLogIn = async (e) => {
@@ -20,7 +24,7 @@ const LogIn = () => {
 
     try {
       await login(data);
-      navigate("/")
+      navigate('/');
     } catch (err) {
       console.error(err);
     }
@@ -39,14 +43,7 @@ const LogIn = () => {
               required
             />
           </label>
-          <label>
-            <input
-              type="password"
-              name="password"
-              placeholder="password"
-              required
-            />
-          </label>
+          <PasswordInput name="password" placeholder="Password" value={password} onChange={setPassword} />
           <button type="submit">LOG IN</button>
         </form>
         <p>
