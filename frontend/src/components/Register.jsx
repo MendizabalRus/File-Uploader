@@ -6,14 +6,16 @@ import { Link } from 'react-router';
 import style from '../style/Register.module.css';
 
 // files
-import PasswordInput from './PasswordInput.jsx';
-import warningSvg from "../assets/warning.svg"
+import TextInput from './inputs/TextInput.jsx';
+import PasswordInput from './inputs/PasswordInput.jsx';
+import warningSvg from '../assets/warning.svg';
 
 const Register = () => {
-  const [firstname, setFirstname] = useState("")
-  const [lastname, setLastname] = useState("")
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstname, setFirstname] = useState({ text: "", clicked: 0 });
+  const [lastname, setLastname] = useState({ text: "", clicked: 0 });
+  const [email, setEmail] = useState({ text: "", clicked: 0 });
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState([]);
 
   const handleRegistration = async (e) => {
@@ -41,78 +43,85 @@ const Register = () => {
     }
   };
 
-  // potential backend errors
-  const firstnameErrs = errors.find((err) => err.path === 'firstname');
-  const lastnameErrs = errors.find((err) => err.path === 'lastname');
-  const emailErrs = errors.find((err) => err.path === 'email');
-  const passwordErrs = errors.find((err) => err.path === 'password');
-  const confirmPasswordErrs = errors.find((err) => err.path === "confirmPassword")
+  // server-side existing email error
+  const exisitingEmailErr = errors.find(
+    (error) =>
+      error.msg === 'An account with this e-mail address already exists!',
+  );
 
   // instant feedback
-  const isAlpha = (text) => /^[A-Za-zÀ-ÿ\s'-]+$/.test(text);
+  const isEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const firstnameValid = firstname === "" || isAlpha(firstname);
-  const lastnameValid = lastname === "" || isAlpha(lastname);
+  const emailValid = email === '' || isEmail(email);
+  const passwordsMatch = password === confirmPassword || confirmPassword === '';
 
   return (
     <div className={style.register}>
       <div className={style.registerLeft}>
         <h1>Register</h1>
         <form onSubmit={handleRegistration} className={style.registerForm}>
-          <label>
-            <input
-              type="text"
-              name="firstname"
-              /*pattern="[A-Za-z]"*/
-              placeholder="First Name"
-              onChange={(e) => setFirstname(e.target.value)}
-              required
-            />
-          </label>
-          {/* INSTANT TARGET VALUE FEEDBACK */}
-          {!firstnameValid && <p>Firstname must only contain letters!</p>}
-          {/* POST-SUBMIT SERVER-SIDE VALIDATION ERRORS */}
-          {firstnameErrs && <p className={style.serverErr}><img src={warningSvg} alt="Warning icon" className={style.warningSvg}/>{firstnameErrs.msg}</p>}
-          <label>
-            <input
-              type="text"
-              name="lastname"
-              /*pattern="[A-Za-z]"*/
-              placeholder="Last Name"
-              onChange={(e) => setLastname(e.target.value)}
-              required
-            />
-          </label>
-          {/* INSTANT TARGET VALUE FEEDBACK */}
-          {!lastnameValid && <p>Lastname must only contain letters!</p>}
-          {/* POST-SUBMIT SERVER-SIDE VALIDATION ERRORS */}
-          {lastnameErrs && <p className={style.serverErr}><img src={warningSvg} alt="Warning icon" className={style.warningSvg}/>{lastnameErrs.msg}</p>}
+          <TextInput 
+            label="First name"
+            name="firstname"
+            placeholder="Mikel"
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
+          />
+          <TextInput
+            label="Last name"
+            name="lastname"
+            placeholder="Oyarzabal"
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+          />
           <label>
             <input
               type="email"
               name="email"
               placeholder="example@email.com"
+              onChange={(e) => setEmail(e.target.value)}
               required
+              className={email ? style.valid : style.invalid}
             />
           </label>
-          {/* POST-SUBMIT SERVER-SIDE VALIDATION ERRORS */}
-          {emailErrs && <p className={style.serverErr}><img src={warningSvg} alt="Warning icon" className={style.warningSvg}/>{emailErrs.msg}</p>}
+          {/*INSTANT FEEDBACK*/}
+          {!emailValid && <p>E-mail address must be valid!</p>}
+          {/* SERVER SIDE FEEDBACK */}
+          {exisitingEmailErr && (
+            <p className={style.inputErr}>
+              <img
+                src={warningSvg}
+                alt="Warning icon"
+                className={style.warningSvg}
+              />
+              {exisitingEmailErr.msg}
+            </p>
+          )}
           <PasswordInput
             name="password"
             placeholder="Password"
             value={password}
             onChange={setPassword}
             showStrength
+            className={firstname ? style.valid : style.invalid}
           />
-          {/* POST-SUBMIT SERVER-SIDE VALIDATION ERRORS */}
-          {passwordErrs && <p className={style.serverErr}><img src={warningSvg} alt="Warning icon" className={style.warningSvg}/>{passwordErrs.msg}</p>}
           <PasswordInput
             name="confirmPassword"
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={setConfirmPassword}
+            className={firstname ? style.valid : style.invalid}
           />
-          {confirmPasswordErrs && <p className={style.serverErr}><img src={warningSvg} alt="Warning icon" className={style.warningSvg}/>{confirmPasswordErrs.msg}</p>}
+          {!passwordsMatch && (
+            <p className={style.inputErr}>
+              <img
+                src={warningSvg}
+                alt="Warning icon"
+                className={style.warningSvg}
+              />
+              Passwords do not match!
+            </p>
+          )}
           <button type="submit">Register</button>
         </form>
         <p>

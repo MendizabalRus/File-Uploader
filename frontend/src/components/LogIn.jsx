@@ -7,7 +7,7 @@ import style from '../style/LogIn.module.css';
 
 // files
 import { useAuth } from './AuthContext';
-import PasswordInput from './PasswordInput.jsx';
+import PasswordInput from './inputs/PasswordInput.jsx';
 
 const LogIn = () => {
   const [password, setPassword] = useState("");
