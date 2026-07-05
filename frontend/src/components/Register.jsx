@@ -7,10 +7,15 @@ import { Link } from 'react-router';
 import style from '../style/Register.module.css';
 
 // files
+import { useAuth } from './AuthContext.jsx';
+
 import TextInput from './inputs/TextInput.jsx';
 import EmailInput from './inputs/EmailInput.jsx';
 import PasswordInput from './inputs/PasswordInput.jsx';
+
 import warningSvg from '../assets/warning.svg';
+
+
 
 const Register = () => {
   const navigate = useNavigate();
