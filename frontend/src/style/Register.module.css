@@ -35,3 +35,24 @@
   filter: invert(16%) sepia(85%) saturate(7488%) hue-rotate(0deg)
     brightness(92%) contrast(119%);
 }
+
+.submit {
+  border: none;
+  border-radius: 5px;
+
+  outline: 2px solid white;
+  outline-offset: 2px;
+
+  transition: outline-offset 200ms ease;
+  transition: transform 100ms ease;
+}
+
+.submit:hover {
+  outline-offset: 6px;
+  outline: 2px solid blue;
+  background-color: rgba(0, 0, 255, 0.7);
+}
+
+.submit:active {
+  transform: translateY(1px);
+}

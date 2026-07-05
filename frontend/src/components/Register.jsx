@@ -1,4 +1,5 @@
 // react & packages
+import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { Link } from 'react-router';
 
@@ -12,6 +13,8 @@ import PasswordInput from './inputs/PasswordInput.jsx';
 import warningSvg from '../assets/warning.svg';
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -39,9 +42,12 @@ const Register = () => {
 
     // if there are errors save them in the errors state
     if (!response.ok) {
+      console.log(result)
       setErrors(result.errors);
       return;
     }
+
+    navigate("/");
   };
 
   // server-side existing email error
@@ -114,7 +120,7 @@ const Register = () => {
               Passwords do not match!
             </p>
           )}
-          <button type="submit">Register</button>
+          <button type="submit" className={style.submit} >Register</button>
         </form>
         <p>
           Already have an account? <Link to={'/log-in'}>Log in</Link> now!

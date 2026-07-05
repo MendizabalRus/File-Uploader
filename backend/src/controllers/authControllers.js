@@ -1,6 +1,6 @@
 // packages
 const bcrypt = require("bcryptjs");
-const { body, validationResult, matchingData } = require("express-validator");
+const { body, validationResult, matchedData } = require("express-validator");
 
 // files
 const { prisma } = require("../../lib/prisma.js");
@@ -36,15 +36,14 @@ const registerValidation = [
     .isEmail()
     .withMessage("Please enter a valid email address.")
     .custom(async (email) => {
-      const exists = await prisma.user.findUnique({
-        where: { email },
-      });
-      if (exists) {
-       return false;
-      }
-      return true;
-    })
-    .withMessage("An account with this e-mail address already exists!"),
+    const exists = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (exists) {
+      throw new Error("An account with this e-mail address already exists!");
+    }
+    return true;
+  }),
 
   body("password")
     .trim()
@@ -80,13 +79,13 @@ const postRegister = [
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(401).json({
+      return res.status(400).json({
         errors: errors.array(),
       });
     }
     try {
       const { firstname, lastname, email, password, confirmPassword } =
-        req.body;
+        matchedData(req);
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -99,7 +98,16 @@ const postRegister = [
         },
       });
 
-      res.status(201).json(user);
+      req.login(user, (err) => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .json({ error: "Could not log in after registration" });
+        }
+        const {password: _password, ...safeUser} = user;
+        res.status(201).json(safeUser);
+      });
     } catch (err) {
       console.error(err);
 
