@@ -7,6 +7,7 @@ import style from '../style/Register.module.css';
 
 // files
 import TextInput from './inputs/TextInput.jsx';
+import EmailInput from './inputs/EmailInput.jsx';
 import PasswordInput from './inputs/PasswordInput.jsx';
 import warningSvg from '../assets/warning.svg';
 
@@ -49,10 +50,7 @@ const Register = () => {
       error.msg === 'An account with this e-mail address already exists!',
   );
 
-  // instant feedback
-  const isEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const emailValid = email === '' || isEmail(email);
+  // instant feedback to know if passwords match
   const passwordsMatch = password === confirmPassword || confirmPassword === '';
 
   return (
@@ -74,18 +72,13 @@ const Register = () => {
             value={lastname}
             onChange={(e) => setLastname(e.target.value)}
           />
-          <label>
-            <input
-              type="email"
-              name="email"
-              placeholder="example@email.com"
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className={email ? style.valid : style.invalid}
-            />
-          </label>
-          {/*INSTANT FEEDBACK*/}
-          {!emailValid && <p>E-mail address must be valid!</p>}
+          <EmailInput 
+            label="E-mail address"
+            name="email"
+            placeholder="example@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           {/* SERVER SIDE FEEDBACK */}
           {exisitingEmailErr && (
             <p className={style.inputErr}>
@@ -103,14 +96,13 @@ const Register = () => {
             value={password}
             onChange={setPassword}
             showStrength
-            className={firstname ? style.valid : style.invalid}
           />
           <PasswordInput
             name="confirmPassword"
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={setConfirmPassword}
-            className={firstname ? style.valid : style.invalid}
+            mismatchErr={!passwordsMatch ? "Passwords do not match!" : null}
           />
           {!passwordsMatch && (
             <p className={style.inputErr}>

@@ -1,21 +1,37 @@
 .register {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 
-    padding: 150px 200px;
+  padding: 150px 200px;
 }
 
 .registerLeft {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-    padding: 20px 80px;
-    margin-right: 200px;
+  padding: 20px 80px;
+  margin-right: 200px;
 }
 
 .registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputErr {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    align-items: center;
+    gap: 5px;
+
+    color: red;
+}
+
+.warningSvg {
+  width: 30px;
+  height: auto;
+
+  filter: invert(16%) sepia(85%) saturate(7488%) hue-rotate(0deg)
+    brightness(92%) contrast(119%);
 }

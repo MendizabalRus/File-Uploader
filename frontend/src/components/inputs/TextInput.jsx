@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 // style
-import style from '../../style/inputs/TextInput.module.css';
+import style from '../../style/inputs/Input.module.css';
 
 // files
 import warningSvg from '../../assets/warning.svg';
@@ -38,9 +38,9 @@ const TextInput = ({
     <div className={style.field}>
       <input
         type="text"
-        placeholder={placeholder}
         name={name}
         value={value}
+        placeholder={placeholder}
         onChange={handleChange}
         onBlur={() => setTouched(true)}
         required={required}

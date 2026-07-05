@@ -10,7 +10,6 @@ import passwordHiddenSvg from '../../assets/passwordHidden.svg';
 import tickSvg from '../../assets/tick.svg';
 import crossSvg from '../../assets/cross.svg';
 
-
 const PasswordInput = ({
   placeholder,
   name,
@@ -19,8 +18,10 @@ const PasswordInput = ({
   required = true,
   showStrength = false,
   format = '[^A-Za-z0-9]{8,30}',
+  mismatchErr,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [touched, setTouched] = useState(false);
   const [visible, setVisible] = useState(false);
   // const [password, setPassword] = useState(''); -> Needs to be declared at the parent component so the password can later be read by the actual form that will be sent to the backend!
 
@@ -68,38 +69,55 @@ const PasswordInput = ({
   const passwordRequirements = [
     {
       text: 'Contains atleast 8 characters',
-      valid: value.length > 8,
+      requisite: value.length >= 8,
     },
     {
       text: 'Contains atleast a lowercase letter',
-      valid: /[a-z]/.test(value),
+      requisite: /[a-z]/.test(value),
     },
     {
       text: 'Contains atleast an uppercase letter',
-      valid: /[A-Z]/.test(value),
+      requisite: /[A-Z]/.test(value),
     },
     {
       text: 'Contains atleast a number',
-      valid: /[\d]/.test(value),
+      requisite: /[\d]/.test(value),
     },
     {
       text: 'Contains atleast a special character',
-      valid: /[^A-Za-z0-9]/.test(value),
+      requisite: /[^A-Za-z0-9]/.test(value),
     },
   ];
 
+  // All requisites are met (or they are empty and not required)
+  const allRequirementsMet = passwordRequirements.every((requirement) => requirement.requisite);
+  const clientValid = value === '' ? !required : allRequirementsMet;
+  const isValid = mismatchErr ? false : clientValid; // External error overrides requirements to be cheked only in case of matching passwords (only is PasswordInput has mismatchErr defined)
+
+  const statusClass = !touched
+    ? style.neutral
+    : isValid
+      ? style.valid
+      : style.invalid;
+
+  const handleChange = (e) => {
+    if (!showStrength && !touched) setTouched(true); // Instant confirmation for password inputs that are meant to confirm passwords
+    onChange(e.target.value);
+  };
   return (
     <>
-      <div className={style.passwordCont}>
+      <div className={style.field}>
         <input
           type={passwordConfig.type}
           placeholder={placeholder}
           name={name}
           format={format}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleChange}
           onFocus={() => setIsFocused(true)}
+          onBlur={() => setTouched(true)}
           required={required}
+          className={`${style.input} ${statusClass}`}
         />
         <img
           src={passwordConfig.src}
@@ -128,9 +146,16 @@ const PasswordInput = ({
             return (
               <li
                 key={requirement.text}
-                className={requirement.valid ? style.valid : style.invalid}
+                className={
+                  requirement.requisite ? style.completed : style.uncompleted
+                }
               >
-                <img src={requirement.valid? tickSvg : crossSvg} alt={requirement.valid? "Tick icon" : "Cross icon"} className={`${style.requirementIcon} ${requirement.valid ? style.tickSvg : style.crossSvg}`} />{requirement.text}
+                <img
+                  src={requirement.requisite ? tickSvg : crossSvg}
+                  alt={requirement.requisite ? 'Tick icon' : 'Cross icon'}
+                  className={`${style.requirementIcon} ${requirement.requisite ? style.tickSvg : style.crossSvg}`}
+                />
+                {requirement.text}
               </li>
             );
           })}

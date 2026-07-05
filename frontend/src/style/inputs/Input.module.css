@@ -9,20 +9,19 @@
   border-radius: 5px;
   outline-color: white;
   outline-offset: 0px;
-
 }
 .input {
-    padding: 5px;
+  padding: 5px;
 
-    border: none;
-    border-radius: 5px;
-    outline: 2px solid white;
-    outline-offset: 2px;
+  border: none;
+  border-radius: 5px;
+  outline: 2px solid white;
+  outline-offset: 2px;
 
-    transition: outline-offset 200ms ease;
+  transition: outline-offset 200ms ease;
 }
 .input:hover {
-    outline: 2px solid blue;
+  outline: 2px solid blue;
   outline-offset: 6px;
 }
 .neutral {
