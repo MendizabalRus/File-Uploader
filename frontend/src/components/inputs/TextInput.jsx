@@ -21,23 +21,27 @@ const TextInput = ({
 }) => {
   const [touched, setTouched] = useState(false);
 
-  const isValid = value === '' || validate(value);
+  const isValid = value === '' ? !required : validate(value);
 
-  // clase según el estado: sin tocar -> neutro, tocado -> válido/inválido
   const statusClass = !touched
     ? style.neutral
     : isValid
       ? style.valid
       : style.invalid;
 
+  const handleChange = (e) => {
+    if (!touched) setTouched(true);
+    onChange(e);
+  };
+
   return (
-    <div className={style.field} >
+    <div className={style.field}>
       <input
         type="text"
         placeholder={placeholder}
         name={name}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         onBlur={() => setTouched(true)}
         required={required}
         className={`${style.input} ${statusClass}`}
@@ -51,7 +55,9 @@ const TextInput = ({
             alt="Warning Icon"
             className={style.warningSvg}
           />
-          {label} must only contain letters!
+          {value === ''
+            ? `${label} is required!`
+            : `${label} must only contain letters!`}
         </p>
       )}
     </div>

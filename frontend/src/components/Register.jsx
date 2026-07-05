@@ -11,9 +11,9 @@ import PasswordInput from './inputs/PasswordInput.jsx';
 import warningSvg from '../assets/warning.svg';
 
 const Register = () => {
-  const [firstname, setFirstname] = useState({ text: "", clicked: 0 });
-  const [lastname, setLastname] = useState({ text: "", clicked: 0 });
-  const [email, setEmail] = useState({ text: "", clicked: 0 });
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState([]);
