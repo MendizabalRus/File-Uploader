@@ -2,13 +2,13 @@
 import { useState } from 'react';
 
 // style
-import style from '../../style/inputs/PasswordInput.module.css';
+import style from '../../../style/inputs/PasswordInput.module.css';
 
 // files
-import passwordVisibleSvg from '../../assets/passwordVisible.svg';
-import passwordHiddenSvg from '../../assets/passwordHidden.svg';
-import tickSvg from '../../assets/tick.svg';
-import crossSvg from '../../assets/cross.svg';
+import passwordVisibleSvg from '../../../assets/passwordVisible.svg';
+import passwordHiddenSvg from '../../../assets/passwordHidden.svg';
+import tickSvg from '../../../assets/tick.svg';
+import crossSvg from '../../../assets/cross.svg';
 
 const PasswordInput = ({
   placeholder,

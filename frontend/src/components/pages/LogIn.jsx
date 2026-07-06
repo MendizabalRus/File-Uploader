@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 
 // style
-import style from '../style/LogIn.module.css';
+import style from '../../style/LogIn.module.css';
 
 // files
-import { useAuth } from './AuthContext';
-import EmailInput from './inputs/EmailInput.jsx';
-import PasswordInput from './inputs/PasswordInput.jsx';
+import { useAuth } from '../AuthContext.jsx';
+import EmailInput from '../utils/form utils/EmailInput.jsx';
+import PasswordInput from '../utils/form utils/PasswordInput.jsx';
 
 const LogIn = () => {
   const [email, setEmail] = useState("")

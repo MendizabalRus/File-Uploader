@@ -1,0 +1,32 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding: 20px;
+
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.header h1 {
+    width: auto;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.profile {
+    position: relative;
+
+    width: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profilePic {
+    width: 40px;
+    height: auto;
+}
+
+.dropdown {
+    position: absolute;
+}

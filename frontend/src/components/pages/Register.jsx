@@ -4,20 +4,21 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 
 // style
-import style from '../style/Register.module.css';
+import style from '../../style/Register.module.css';
 
 // files
-import { useAuth } from './AuthContext.jsx';
+import { useAuth } from '../AuthContext.jsx';
 
-import TextInput from './inputs/TextInput.jsx';
-import EmailInput from './inputs/EmailInput.jsx';
-import PasswordInput from './inputs/PasswordInput.jsx';
+import TextInput from '../utils/form utils/TextInput.jsx';
+import EmailInput from '../utils/form utils/EmailInput.jsx';
+import PasswordInput from '../utils/form utils/PasswordInput.jsx';
 
-import warningSvg from '../assets/warning.svg';
+import warningSvg from '../../assets/warning.svg';
 
 
 
 const Register = () => {
+  const { checkAuth } = useAuth();
   const navigate = useNavigate();
 
   const [firstname, setFirstname] = useState("");
@@ -51,7 +52,7 @@ const Register = () => {
       setErrors(result.errors);
       return;
     }
-
+    await checkAuth();
     navigate("/");
   };
 

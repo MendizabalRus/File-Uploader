@@ -1,7 +1,7 @@
 // react & packages
 
 // style
-import style from "../style/Favorites.module.css";
+import style from "../../style/Favorites.module.css";
 
 // files
 

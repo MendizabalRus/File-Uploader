@@ -2,7 +2,7 @@
 import { Outlet } from 'react-router';
 
 //styles
-import '../style/AuthLayout.module.css';
+import '../../style/AuthLayout.module.css';
 
 const AuthLayout = () => {
   return (

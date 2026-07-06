@@ -1,5 +1,9 @@
-.MainLayout {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
+.mainLayout {
+    display: flex;
+    flex-direction: column;
+}
+
+.belowHeader {
+    display: flex;
+    flex-direction: row;
 }

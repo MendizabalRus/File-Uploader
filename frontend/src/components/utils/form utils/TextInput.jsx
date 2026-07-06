@@ -2,14 +2,14 @@
 import { useState } from 'react';
 
 // style
-import style from '../../style/inputs/Input.module.css';
+import style from '../../../style/inputs/Input.module.css';
 
 // files
-import warningSvg from '../../assets/warning.svg';
+import warningSvg from '../../../assets/warning.svg';
 
-const isEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isAlpha = (text) => /^[A-Za-zÀ-ÿ\s'-]+$/.test(text);
 
-const EmailInput = ({
+const TextInput = ({
   label,
   name,
   placeholder,
@@ -17,7 +17,7 @@ const EmailInput = ({
   onChange,
   required = true,
   id,
-  validate = isEmail,
+  validate = isAlpha,
 }) => {
   const [touched, setTouched] = useState(false);
 
@@ -29,14 +29,19 @@ const EmailInput = ({
       ? style.valid
       : style.invalid;
 
+  const handleChange = (e) => {
+    if (!touched) setTouched(true);
+    onChange(e);
+  };
+
   return (
     <div className={style.field}>
       <input
-        type="email"
+        type="text"
         name={name}
         value={value}
         placeholder={placeholder}
-        onChange={onChange}
+        onChange={handleChange}
         onBlur={() => setTouched(true)}
         required={required}
         className={`${style.input} ${statusClass}`}
@@ -44,17 +49,18 @@ const EmailInput = ({
       />
       {touched && !isValid && (
         <p className={style.inputErr}>
+          {' '}
           <img
             src={warningSvg}
-            alt="Warning icon"
+            alt="Warning Icon"
             className={style.warningSvg}
           />
           {value === ''
             ? `${label} is required!`
-            : `${label} must be a valid e-mail address!`}
+            : `${label} must only contain letters!`}
         </p>
       )}
     </div>
   );
 };
-export default EmailInput;
+export default TextInput;

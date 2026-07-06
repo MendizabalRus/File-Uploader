@@ -1,13 +1,13 @@
-import AuthLayout from './AuthLayout.jsx';
-import Register from './Register.jsx';
-import LogIn from './LogIn.jsx';
+import AuthLayout from './layouts/AuthLayout.jsx';
+import Register from './pages/Register.jsx';
+import LogIn from './pages/LogIn.jsx';
 
 import ProtectedRoute from './ProtectedRoute.jsx';
-import MainLayout from './MainLayout.jsx';
-import Home from './Home.jsx';
+import MainLayout from './layouts/MainLayout.jsx';
+import Home from './pages/Home.jsx';
 // to be added: shared, favorites, folder/folderId...
 
-import ErrorPage from './ErrorPage.jsx';
+import ErrorPage from './pages/ErrorPage.jsx';
 
 const routes = [
   {
