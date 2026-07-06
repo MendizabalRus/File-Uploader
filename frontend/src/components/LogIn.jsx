@@ -7,10 +7,12 @@ import style from '../style/LogIn.module.css';
 
 // files
 import { useAuth } from './AuthContext';
+import EmailInput from './inputs/EmailInput.jsx';
 import PasswordInput from './inputs/PasswordInput.jsx';
 
 const LogIn = () => {
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const { login } = useAuth();
@@ -35,15 +37,19 @@ const LogIn = () => {
       <div className={style.logInLeft}>
         <h1>Log In</h1>
         <form onSubmit={handleLogIn} className={style.logInForm}>
-          <label>
-            <input
-              type="email"
-              name="email"
-              placeholder="example@email.com"
-              required
-            />
-          </label>
-          <PasswordInput name="password" placeholder="Password" value={password} onChange={setPassword} />
+          <EmailInput
+            label="E-mail Adress"
+            name="email"
+            placeholder="example@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <PasswordInput
+            name="password"
+            placeholder="Password"
+            value={password}
+            onChange={setPassword}
+          />
           <button type="submit">LOG IN</button>
         </form>
         <p>

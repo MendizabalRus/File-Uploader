@@ -21,6 +21,7 @@
   transition: outline-offset 200ms ease;
 }
 .input:hover {
+  border: none;
   outline: 2px solid blue;
   outline-offset: 6px;
 }
