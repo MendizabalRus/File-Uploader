@@ -12,6 +12,7 @@ const cors = require("cors");
 
 // files
 const authRoutes = require("./routes/authRoutes.js");
+const filesRoutes = require("./routes/filesRoutes.js");
 
 //passport config
 passport.use(
@@ -99,7 +100,10 @@ app.use(
 app.use(express.json());
 
 // redirect /api petitions to authentication routes (then to authenitcation controllers)
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);
+
+// redirect /api petitions to files routes (then to files controllers)
+app.use("/api/files", filesRoutes);
 
 // server
 app.listen(8080, (err) => {

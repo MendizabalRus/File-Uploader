@@ -9,6 +9,6 @@ const authController = require("../controllers/authControllers.js");
 authRouter.post("/register", authController.postRegister);
 authRouter.post("/log-in", passport.authenticate("local"), authController.postLogIn);
 authRouter.post("/log-out", authController.postLogOut);
-authRouter.get("/auth/me", authController.getAuthMe);
+authRouter.get("/me", authController.getAuthMe);
 
 module.exports = authRouter;
