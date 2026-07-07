@@ -6,6 +6,10 @@ import style from '../../style/Home.module.css';
 // files
 
 const Home = () => {
+
+    // FETCH ALL THE FILES WHERE USER = LOGGED IN USER
+        //USER THE FILES DATA TO FILL ARCHIVE TO .MAP AND CREATE ARCHIVE COMPONENTS
+
   return (
     <section className={style.home}>
       <h1>Recent archives</h1>

@@ -9,7 +9,60 @@
     background-color: rgba(0, 72, 255, 0.7);
 }
 
-.sidebar * {
+.fileWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;  
+}
+
+.fileInputLabel {
+    display: inline-block;
+
+    padding: 5px;
+
+    border: none;
+    border-radius: 5px;
+
+    outline: 1px solid white;
+    outline-offset: 2px;
+
+    background-color: transparent;
+
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+
+    text-align: center;
+    text-decoration: none;
+
+    transition: outline-offset 200ms ease;
+}
+
+.fileInputLabel:hover {
+    outline-offset: 4px;
+    background-color: white;
+    color: blue;
+}
+
+.fileInput {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    margin: -1px;
+    padding: 0px;
+    
+    border: 0;
+    
+    overflow: hidden;
+    white-space: nowrap;
+
+    clip: rect(0, 0, 0, 0);
+}
+
+.sidebar .link {
     padding: 5px;
 
     border: none;
@@ -30,7 +83,7 @@
     transition: outline-offset 200ms ease;
 }
 
-.sidebar *:hover {
+.sidebar .link:hover {
     outline-offset: 4px;
 
     background-color: white;
