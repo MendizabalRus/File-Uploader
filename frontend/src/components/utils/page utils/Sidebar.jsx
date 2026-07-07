@@ -1,4 +1,5 @@
 // react & packages
+import { Link } from "react-router";
 
 // style
 import style from "../../../style/Sidebar.module.css";
@@ -8,9 +9,9 @@ import style from "../../../style/Sidebar.module.css";
 const Sidebar = () => {
     return(
         <section className={style.sidebar}>
-            <button>All</button>
-            <button>Favorites</button>
-            <button>Shared</button>
+            <Link to="/">All</Link>
+            <Link to="/favorites">Favorites</Link>
+            <Link to="/shared">Shared</Link>
         </section>
     );
 }
