@@ -1,5 +1,4 @@
 // react & packages
-import { useState } from 'react';
 import { Outlet } from 'react-router';
 
 // styles
@@ -10,11 +9,10 @@ import Header from "../utils/page utils/Header.jsx"
 import Sidebar from "../utils/page utils/Sidebar.jsx"
 
 const MainLayout = () => {
-  const [dropdown, setDropdown] = useState(false)
   return (
     <div className={style.mainLayout}>
       <Header />
-      <div className={style.belowHeader} onClick={}>
+      <div className={style.belowHeader} >
         <Sidebar />
         <Outlet />
       </div>

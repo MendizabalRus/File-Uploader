@@ -5,7 +5,7 @@
 
     padding: 20px;
 
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 72, 255, 0.7);
 }
 
 .header h1 {
@@ -25,8 +25,75 @@
 .profilePic {
     width: 40px;
     height: auto;
+
+    filter: brightness(100);
 }
 
 .dropdown {
     position: absolute;
+    top: 80px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+
+    outline: 1px solid blue;
+    outline-offset: 4px;
+
+    background-color: rgba(18, 92, 253, 0.7);
+
+    animation: fade 500ms ease-out;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.dropdown * {
+    border: 1px solid white;
+    border-radius: 5px;
+
+    background-color: transparent;
+
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    text-align: center;
+    
+    cursor: pointer;
+    
+    animation: itemFade 1000ms ease;
+}
+
+@keyframes itemFade {
+    from {
+        opacity: 0;
+    }
+    
+    to {
+        opacity: 1;
+    }
+}
+
+.dropdown *:nth-child(1) {
+    animation-delay: 150ms;
+}
+
+.dropdown *:nth-child(2) {
+    animation-delay: 300ms;
+}
+
+.dropdown *:nth-child(3) {
+    animation-delay: 450ms;
 }

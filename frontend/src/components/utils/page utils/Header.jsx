@@ -1,6 +1,7 @@
 // react & packages
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 
 // style
 import style from '../../../style/Header.module.css';
@@ -29,7 +30,9 @@ const Header = () => {
         <img src={profilePic} alt="User's profile picture" className={style.profilePic}/>
         {dropdown && (
           <div className={style.dropdown}>
-
+            <Link to="account">Account</Link>
+            <Link to="settings">Settings</Link>
+            <button onClick={handleLogOut}>Log Out</button>
           </div>
         )}
       </div>
@@ -37,5 +40,3 @@ const Header = () => {
   );
 };
 export default Header;
-
-{/*<button onClick={handleLogOut}>Log Out</button>*/}
