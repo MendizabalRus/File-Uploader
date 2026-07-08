@@ -2,7 +2,8 @@ const { prisma } = require("../../lib/prisma.js");
 
 const postCreateFolder = async (req, res) => {
   try {
-    const { name, parentId } = req.body;
+    const { name } = req.body;
+    const { parentId } = parseInt(req.body, 10);
 
     if (!name || !name.trim()) {
       return res
@@ -46,32 +47,40 @@ const postCreateFolder = async (req, res) => {
 const getFolder = async (req, res) => {
   try {
     const { folderId } = req.params;
-    const parentId = folderId === "root" ? null : parentId;
+    const parentId = folderId === "root" ? null : parseInt(folderId, 10);
 
-    if (parentId) {
-      const folder = await prisma.folder.findUnique({
+    if (folderId !== "root" && Number.isNaN(parentId)) {
+      return res.status(400).json({
+        error: "Invalid folder id.",
+      });
+    }
+
+    let folder = null;
+
+    if (parentId !== null) {
+      folder = await prisma.folder.findUnique({
         where: { id: parentId },
       });
 
-      if (!folder || folder.ownerId === req.user.id) {
+      if (!folder || folder.ownerId !== req.user.id) {
         return res
           .status(404)
           .json({ error: `Error ${res.status}: folder was not found.` });
       }
-
-      const [folders, files] = await Promise.all([
-        await prisma.folder.findMany({
-          where: { ownerId: req.user.id, parentId },
-          orderBy: { name: "asc" },
-        }),
-        await prisma.file.findMany({
-          where: { ownerId: req.user.id, folderId, parentId },
-          orderBy: { name: "desc" },
-        }),
-      ]);
-
-      res.json({ folder, files });
     }
+
+    const [folders, files] = await Promise.all([
+      prisma.folder.findMany({
+        where: { ownerId: req.user.id, parentId },
+        orderBy: { name: "asc" },
+      }),
+      prisma.file.findMany({
+        where: { ownerId: req.user.id, folderId: parentId },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+
+    res.json({ folder, folders, files });
   } catch (err) {
     console.error(err);
     return res
@@ -82,7 +91,7 @@ const getFolder = async (req, res) => {
 
 const postUpdateFolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = parseInt(req.params, 10);
     const { name, parentId } = req.body;
 
     const folder = await prisma.folder.findUnique({
@@ -145,9 +154,9 @@ const isFolderDescendant = async (candidateId, folderId) => {
 
 const postDeleteFolder = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = parseInt(req.params, 10);
 
-    const folder = await prisma.folder.findUnqiue({
+    const folder = await prisma.folder.findUnique({
       where: { id },
     });
 
