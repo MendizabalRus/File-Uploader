@@ -13,24 +13,51 @@ datasource db {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
+  id        Int   @id @default(autoincrement())
   firstname String
   lastname  String
-  email     String @unique
+  email     String   @unique
   password  String
-  posts     File[]
+
+  folders   Folder[]
+  files     File[]
+
+  // ... tus otros campos existentes
+}
+
+model Folder {
+  id        Int   @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId   Int
+
+  // Autorrelación para anidamiento
+  parent    Folder?  @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId  Int?
+  children  Folder[] @relation("FolderToFolder")
+
+  files     File[]
+
+  // Evita dos carpetas con el mismo nombre en el mismo nivel para el mismo usuario
+  @@unique([ownerId, parentId, name])
 }
 
 model File {
-  id         Int      @id @default(autoincrement())
-  name       String
-  path       String
-  size       Int
-  mimeType   String
-  uploadedAt DateTime @default(now())
+  id           Int   @id @default(autoincrement())
+  originalName String
+  filename     String   // nombre físico único en disco (el que genera multer)
+  size         Int
+  mimetype     String
+  createdAt    DateTime @default(now())
 
-  ownerId Int
-  owner   User @relation(fields: [ownerId], references: [id])
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId      Int
+
+  folder       Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId     Int?  // null = archivo en la raíz
 }
 
 model Session {
