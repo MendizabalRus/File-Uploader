@@ -13,7 +13,7 @@ const cors = require("cors");
 // files
 const authRoutes = require("./routes/authRoutes.js");
 const filesRoutes = require("./routes/filesRoutes.js");
-const foldersRoutes = require("./routes/foldersRoutes.js");
+const foldersRoutes = require("./routes/foldersRoutes.js")
 
 //passport config
 passport.use(
@@ -106,6 +106,7 @@ app.use("/api/auth", authRoutes);
 // redirect /api petitions to files routes (then to files controllers)
 app.use("/api/files", filesRoutes);
 
+// redirect /api petitions to files routes (then to files controllers)
 app.use("/api/folders", foldersRoutes);
 
 // server

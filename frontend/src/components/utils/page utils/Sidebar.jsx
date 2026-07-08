@@ -6,8 +6,11 @@ import { Link } from 'react-router';
 import style from '../../../style/Sidebar.module.css';
 
 // files
+import folderSvg from '../../../assets/folder.svg';
 
 const Sidebar = () => {
+  const [newDropdown, setNewDropdown] = useState(false);
+  const [newFolder, setNewFolder] = useState(false);
   const [file, setFile] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -36,7 +39,7 @@ const Sidebar = () => {
       });
 
       const result = await response.json();
-      console.log(result)
+      console.log(result);
 
       if (!response.ok) {
         setError(result.error || 'Upload failed');
@@ -51,28 +54,87 @@ const Sidebar = () => {
     }
   };
 
+  const handleCreateFolder = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get("name")
+    }
+
+    console.log(data)
+    try {
+      const response = await fetch('http://localhost:8080/api/folders/create', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data }),
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (!response.ok) {
+        setError(result.error || 'Folder creation failed');
+      }
+
+      setNewFolder((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+      setError('Something went wrong creating the folder...');
+    }
+  };
+
   return (
     <section className={style.sidebar}>
-      <form className={style.fileWrapper} onSubmit={handleFileSubmit}>
-        <label htmlFor="fileUpload" className={style.fileInputLabel}>
-          Upload File
-        </label>
-        <input
-          type="file"
-          id="fileUpload"
-          name="file"
-          onChange={handleFileChange}
-          className={style.fileInput}
-        />
-        {file && (
-            <>
+      <button
+        className={style.new}
+        onClick={() => setNewDropdown((prev) => !prev)}
+      >
+        New
+      </button>
+      {newDropdown && (
+        <div className={style.newDropdown}>
+          <button onClick={() => setNewFolder(true)}>Create Folder</button>
+          {newFolder && (
+            <div className={style.createFolder}>
+              <div className={style.createFolderWindow}>
+                <img src={folderSvg} alt="Folder icon" />
+                <form onSubmit={handleCreateFolder}>
+                  <input type="text" placeholder="name" name="name" required />
+                  <button type="submit">Create</button>
+                </form>
+                <button onClick={() => setNewFolder((prev) => !prev)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+          <hr />
+          <form className={style.fileForm} onSubmit={handleFileSubmit}>
+            <label htmlFor="fileUpload" className={style.fileInputLabel}>
+              Upload File
+            </label>
+            <input
+              type="file"
+              id="fileUpload"
+              name="file"
+              onChange={handleFileChange}
+              className={style.fileInput}
+            />
+            {file && (
+              <div>
                 <span className={style.fileName}>{file.name}</span>
-                <button type='submit'>Upload</button>
-                {error && <p style={{color: "red"}} >{error}</p>}
-                {success && <p style={{color: "green"}} >{success}</p>}
-            </>
-        )}
-      </form>
+                <button type="submit">Upload</button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {success && <p style={{ color: 'green' }}>{success}</p>}
+              </div>
+            )}
+          </form>
+        </div>
+      )}
       <hr />
       <Link to="/" className={style.link}>
         All

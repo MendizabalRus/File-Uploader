@@ -2,13 +2,15 @@ const { prisma } = require("../../lib/prisma.js");
 
 const postCreateFolder = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name } = req.body.data;
     const { parentId } = parseInt(req.body, 10);
+
+    console.log(name)
 
     if (!name || !name.trim()) {
       return res
         .status(400)
-        .json({ error: `Error ${res.status}: Folder name is required.` });
+        .json({ error: `Error: Folder name is required.` });
     }
 
     if (parentId) {
@@ -18,9 +20,13 @@ const postCreateFolder = async (req, res) => {
       if (!parent || parent.ownerId !== req.user.id) {
         return res
           .status(404)
-          .json({ error: `Error ${res.status}: Parent folder not found.` });
+          .json({ error: `Error: Parent folder not found.` });
       }
     }
+
+    console.log(Object.keys(prisma));
+    console.log(prisma.folder);
+    console.log(prisma)
 
     const folder = await prisma.folder.create({
       data: {
@@ -34,13 +40,13 @@ const postCreateFolder = async (req, res) => {
   } catch (err) {
     if (err.code === "P2002") {
       return res.status(409).json({
-        error: `Error ${res.status}: A folder with this name already exists.`,
+        error: `Error: A folder with this name already exists.`,
       });
     }
     console.error(err);
     return res
       .status(500)
-      .json({ error: `Error ${res.status}: Could not create folder.` });
+      .json({ error: `Error: Could not create folder.` });
   }
 };
 
@@ -65,7 +71,7 @@ const getFolder = async (req, res) => {
       if (!folder || folder.ownerId !== req.user.id) {
         return res
           .status(404)
-          .json({ error: `Error ${res.status}: folder was not found.` });
+          .json({ error: `Error: folder was not found.` });
       }
     }
 
@@ -85,7 +91,7 @@ const getFolder = async (req, res) => {
     console.error(err);
     return res
       .status(500)
-      .json({ error: `Error ${res.status}: Could not get folder content.` });
+      .json({ error: `Error: Could not get folder content.` });
   }
 };
 
@@ -101,12 +107,12 @@ const postUpdateFolder = async (req, res) => {
     if (!folder || folder.ownerId !== req.user.id) {
       return res
         .status(404)
-        .json({ error: `Error ${res.status}: Folder was not found.` });
+        .json({ error: `Error: Folder was not found.` });
     }
     if (parentId) {
       if (parentId === id) {
         return res.status(400).json({
-          error: `Error ${res.status}: a folder cannot be moved inside itself.`,
+          error: `Error: a folder cannot be moved inside itself.`,
         });
       }
 
@@ -114,7 +120,7 @@ const postUpdateFolder = async (req, res) => {
 
       if (isDescendant) {
         return res.status(400).json({
-          error: `Error ${res.status}: a folder cannot ve moved inside its descendants.`,
+          error: `Error: a folder cannot ve moved inside its descendants.`,
         });
       }
     }
@@ -131,13 +137,13 @@ const postUpdateFolder = async (req, res) => {
   } catch (err) {
     if (err.code === "P2002") {
       return res.status(409).json({
-        error: `Error ${res.status}: a folder with this name already exists.`,
+        error: `Error: a folder with this name already exists.`,
       });
     }
     console.error(err);
     return res
       .status(500)
-      .json({ error: `Error ${res.status}: could not update changes.` });
+      .json({ error: `Error: could not update changes.` });
   }
 };
 
@@ -163,7 +169,7 @@ const postDeleteFolder = async (req, res) => {
     if (!folder || folder.ownerId !== req.user.id) {
       return res
         .status(404)
-        .json({ error: `Error ${res.status}: folder could not be found.` });
+        .json({ error: `Error: folder could not be found.` });
     }
 
     if (folder) {
@@ -177,7 +183,7 @@ const postDeleteFolder = async (req, res) => {
     console.error(err);
     return res
       .status(500)
-      .json({ error: `Error ${res.status}: could not delete folder.` });
+      .json({ error: `Error: could not delete folder.` });
   }
 };
 

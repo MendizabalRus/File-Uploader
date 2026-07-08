@@ -9,7 +9,49 @@
     background-color: rgba(0, 72, 255, 0.7);
 }
 
-.fileWrapper {
+.newDropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.createFolder {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.createFolderWindow {
+    height: 400px;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+ 
+    padding: 20px;
+
+    border: 2px solid white;
+
+    background-color: blue;
+}
+
+.createFolderWindow img {
+    width: 120px;
+    height: auto;
+}
+
+.fileForm {
     display: flex;
     flex-direction: column;
     align-items: center;
