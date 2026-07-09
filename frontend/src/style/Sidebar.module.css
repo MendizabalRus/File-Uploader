@@ -12,7 +12,14 @@
 .newDropdown {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+}
+
+.show {
+    padding: 10px;
+
+    border: 1px solid white;
+    border-radius: 5px;
 }
 
 .createFolder {

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import style from '../../style/Home.module.css';
 
 // files
+import Folder from "../utils/page utils/Folder.jsx"
 
 const Home = () => {
   const [files, setFiles] = useState([])
@@ -25,16 +26,16 @@ const Home = () => {
     content();
   }, []);
 
+  console.log(folders)
+
   return (
     <section className={style.home}>
       <h1>Recent archives</h1>
-      <li>
+      <div className={style.content}>
         {folders.map((folder) => (
-          <ul key={folder.id}>
-            <p>{folder.name}</p>
-          </ul>
+          <Folder key={folder.id} name={folder.name} owner={folder.owner} createdAt={folder.createdAt} />
         ))}
-      </li>
+      </div>
     </section>
   );
 };

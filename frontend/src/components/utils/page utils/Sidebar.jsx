@@ -7,6 +7,7 @@ import style from '../../../style/Sidebar.module.css';
 
 // files
 import folderSvg from '../../../assets/folder.svg';
+import Button from './Button.jsx';
 
 const Sidebar = () => {
   const [newDropdown, setNewDropdown] = useState(false);
@@ -74,7 +75,6 @@ const Sidebar = () => {
       });
 
       const result = await response.json();
-      console.log(result);
 
       if (!response.ok) {
         setError(result.error || 'Folder creation failed');
@@ -89,52 +89,47 @@ const Sidebar = () => {
 
   return (
     <section className={style.sidebar}>
-      <button
-        className={style.new}
-        onClick={() => setNewDropdown((prev) => !prev)}
-      >
-        New
-      </button>
-      {newDropdown && (
-        <div className={style.newDropdown}>
-          <button onClick={() => setNewFolder(true)}>Create Folder</button>
-          {newFolder && (
-            <div className={style.createFolder}>
-              <div className={style.createFolderWindow}>
-                <img src={folderSvg} alt="Folder icon" />
-                <form onSubmit={handleCreateFolder}>
-                  <input type="text" placeholder="name" name="name" required />
-                  <button type="submit">Create</button>
-                </form>
-                <button onClick={() => setNewFolder((prev) => !prev)}>
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-          <hr />
-          <form className={style.fileForm} onSubmit={handleFileSubmit}>
-            <label htmlFor="fileUpload" className={style.fileInputLabel}>
-              Upload File
-            </label>
-            <input
-              type="file"
-              id="fileUpload"
-              name="file"
-              onChange={handleFileChange}
-              className={style.fileInput}
-            />
-            {file && (
-              <div>
-                <span className={style.fileName}>{file.name}</span>
-                <button type="submit">Upload</button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                {success && <p style={{ color: 'green' }}>{success}</p>}
+      <div className={`${style.newDropdown} ${newDropdown ? style.show : null }`}>
+        <Button value="New" onClick={() => setNewDropdown((prev) => !prev)} />
+        {newDropdown && (
+          <div className={style.newDropdown}>
+              <hr />
+            <Button value="New Folder" onClick={() => setNewFolder((prev) => !prev)} />
+            {newFolder && (
+              <div className={style.createFolder}>
+                <div className={style.createFolderWindow}>
+                  <img src={folderSvg} alt="Folder icon" />
+                  <form onSubmit={handleCreateFolder}>
+                    <input type="text" placeholder="name" name="name" required />
+                    <button type="submit">Create</button>
+                  </form>
+                  <Button value="Cancel" onClick={() => setNewFolder((prev) => !prev)} />
+                </div>
               </div>
             )}
-          </form>
-        </div>
-      )}
+            <form className={style.fileForm} onSubmit={handleFileSubmit}>
+              <label htmlFor="fileUpload" className={style.fileInputLabel}>
+                Upload File
+              </label>
+              <input
+                type="file"
+                id="fileUpload"
+                name="file"
+                onChange={handleFileChange}
+                className={style.fileInput}
+              />
+              {file && (
+                <div>
+                  <span className={style.fileName}>{file.name}</span>
+                  <button type="submit">Upload</button>
+                  {error && <p style={{ color: 'red' }}>{error}</p>}
+                  {success && <p style={{ color: 'green' }}>{success}</p>}
+                </div>
+              )}
+            </form>
+          </div>
+        )}
+      </div>
       <hr />
       <Link to="/" className={style.link}>
         All
