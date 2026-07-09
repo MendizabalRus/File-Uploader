@@ -9,10 +9,12 @@ import style from '../../../style/Header.module.css';
 // files
 import { useAuth } from '../../AuthContext';
 
-import profilePic from "../../../assets/profilePic.svg"
+import profilePic from '../../../assets/profilePic.svg';
+
 
 const Header = () => {
-  const [dropdown, setDropdown] = useState(false)
+  const { user } = useAuth();
+  const [dropdown, setDropdown] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -25,9 +27,16 @@ const Header = () => {
   return (
     <header className={style.header}>
       <h1>The Archive</h1>
-      <div className={style.profile} onClick={() => setDropdown((prev) => !prev)}>
-        <h3 className={style.profileName}>Full name</h3>
-        <img src={profilePic} alt="User's profile picture" className={style.profilePic}/>
+      <div
+        className={style.profile}
+        onClick={() => setDropdown((prev) => !prev)}
+      >
+        <h3 className={style.profileName}>{user.firstname} {user.lastname}</h3>
+        <img
+          src={profilePic}
+          alt="User's profile picture"
+          className={style.profilePic}
+        />
         {dropdown && (
           <div className={style.dropdown}>
             <Link to="account">Account</Link>
