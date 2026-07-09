@@ -26,8 +26,6 @@ const Home = () => {
     content();
   }, []);
 
-  console.log(folders)
-
   return (
     <section className={style.home}>
       <h1>Recent archives</h1>

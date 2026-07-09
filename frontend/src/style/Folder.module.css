@@ -1,5 +1,5 @@
 .Folder {
-  width: 300px;
+  width: 130px;
 
   display: flex;
   flex-direction: column;
@@ -17,6 +17,8 @@
   transition: outline-offset 200ms ease;
 
   background-color: rgba(0, 123, 255, 0.3);
+
+  cursor: pointer;
 }
 
 .Folder:hover {
@@ -43,15 +45,23 @@
   text-align: center;
 }
 
-.specs {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+.text h3:hover {
+    text-decoration: underline;
 }
 
-.specs div {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttons img{
+    width: 20px;
+    height: auto;
+
+    padding: 2px;
+
+    border: 1px solid white;
+    border-radius: 2px;
+
+    filter: contrast(0) brightness(10);
 }
