@@ -116,8 +116,8 @@ const Folder = ({ name, owner, createdAt, id, parentId }) => {
             <div className={style.specsBg}>
               <div className={style.specsWndw}>
                 <h2>{name}</h2>
-                <p>Creation Date: {createdAt}</p>
                 <p>Owner: {owner}</p>
+                <p>Creation Date: {createdAt}</p>
                 <Button
                   value="Back"
                   onClick={() => setSpecs((prev) => !prev)}

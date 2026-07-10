@@ -26,12 +26,14 @@ const Home = () => {
     content();
   }, []);
 
+  console.log(folders)
+
   return (
     <section className={style.home}>
       <h1>Recent archives</h1>
       <div className={style.content}>
         {folders.map((folder) => (
-          <Folder key={folder.id} name={folder.name} owner={folder.owner} createdAt={folder.createdAt} id={folder.id} parentId={folder.parentId} />
+          <Folder key={folder.id} name={folder.name} owner={folder.owner.firstname + " " + folder.owner.lastname} createdAt={folder.createdAt} id={folder.id} parentId={folder.parentId} />
         ))}
       </div>
     </section>

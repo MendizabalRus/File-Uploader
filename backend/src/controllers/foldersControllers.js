@@ -66,6 +66,14 @@ const getFolder = async (req, res) => {
     if (parentId !== null) {
       folder = await prisma.folder.findUnique({
         where: { id: parentId },
+        include: {
+          owner: {
+            select: {
+              firstname: true,
+              lastname: true,
+            }
+          }
+        }
       });
 
       if (!folder || folder.ownerId !== req.user.id) {
@@ -78,10 +86,26 @@ const getFolder = async (req, res) => {
     const [folders, files] = await Promise.all([
       prisma.folder.findMany({
         where: { ownerId: req.user.id, parentId },
+        include: {
+          owner: {
+            select: {
+              firstname: true,
+              lastname: true,
+            }
+          }
+        },
         orderBy: { name: "asc" },
       }),
       prisma.file.findMany({
         where: { ownerId: req.user.id, folderId: parentId },
+        include: {
+          owner: {
+            select: {
+              firstname: true,
+              lastname: true,
+            }
+          }
+        },
         orderBy: { createdAt: "desc" },
       }),
     ]);
