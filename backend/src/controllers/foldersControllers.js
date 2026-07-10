@@ -97,11 +97,13 @@ const getFolder = async (req, res) => {
 
 const postUpdateFolder = async (req, res) => {
   try {
-    const { id } = parseInt(req.params, 10);
+    const id = parseInt(req.params.id);
     const { name, parentId } = req.body;
 
+    console.log(name, parentId)
+
     const folder = await prisma.folder.findUnique({
-      where: { id },
+      where: { id: id },
     });
 
     if (!folder || folder.ownerId !== req.user.id) {
@@ -126,7 +128,7 @@ const postUpdateFolder = async (req, res) => {
     }
 
     const update = await prisma.folder.update({
-      where: { id },
+      where: { id: id },
       data: {
         ...(name !== undefined && { name: name.trim() }),
         ...(parentId !== undefined && { parentId: parentId || null }),
@@ -160,10 +162,10 @@ const isFolderDescendant = async (candidateId, folderId) => {
 
 const postDeleteFolder = async (req, res) => {
   try {
-    const { id } = parseInt(req.params, 10);
+    const id = parseInt(req.params.id);
 
     const folder = await prisma.folder.findUnique({
-      where: { id },
+      where: { id: id },
     });
 
     if (!folder || folder.ownerId !== req.user.id) {
@@ -174,7 +176,7 @@ const postDeleteFolder = async (req, res) => {
 
     if (folder) {
       const deleted = await prisma.folder.delete({
-        where: { id },
+        where: { id: id },
       });
     }
 

@@ -31,7 +31,7 @@ const Home = () => {
       <h1>Recent archives</h1>
       <div className={style.content}>
         {folders.map((folder) => (
-          <Folder key={folder.id} name={folder.name} owner={folder.owner} createdAt={folder.createdAt} />
+          <Folder key={folder.id} name={folder.name} owner={folder.owner} createdAt={folder.createdAt} id={folder.id} parentId={folder.parentId} />
         ))}
       </div>
     </section>

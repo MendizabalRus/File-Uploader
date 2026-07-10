@@ -8,21 +8,63 @@ import style from '../../../style/Folder.module.css';
 import folderSvg from '../../../assets/folder.svg';
 import settingsSvg from '../../../assets/settings.svg';
 
-const Folder = ({ name, owner, createdAt }) => {
-  const [input, setInput] = useState(false);
-  const [nameChange, setNameChange] = useState(name);
+import Button from "./Button.jsx";
 
-  const handleRename = () => {
-    console.log("handleRename")
-    /*
+const Folder = ({ name, owner, createdAt, id, parentId }) => {
+  // Change the folder's name from text to input.
+  const [input, setInput] = useState(false);
+  // Save the name of the folder typed in the input (passed folder name prop as default).
+  const [nameChange, setNameChange] = useState(name);
+  // Open and close specs window.
+  const [specs, setSpecs] = useState(false);
+
+  // Petition to the server to rename the folder
+  const handleRename = async (e) => {
+    e.preventDefault()
+
     try {
-      const response = fetch('http://localhost:8080/api/folders/update');
+      const response = await fetch(`http://localhost:8080/api/folders/update/folder${id}`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            name: nameChange,
+            parentId
+        })
+    })
+    const result = await response.json();
+    console.log(result);
     } catch (err) {
       console.error(err);
     }
-    */
+
     setInput((prev) => !prev);
   };
+
+  // Petition to the server to delete the folder.
+  const handleDeleted = async () => {
+    console.log("handle deleted")
+    try {
+        const response = await fetch(`http://localhost:8080/api/folders/delete/folder${id}`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: id,
+            })
+        })
+
+        const result = await response.text();
+        console.log(result);
+    } catch (err) {
+        console.error(err) ;
+    }
+   setSpecs((prev) => !prev);
+  }
 
   return (
     <div className={style.Folder}>
@@ -36,12 +78,23 @@ const Folder = ({ name, owner, createdAt }) => {
             value={nameChange}
             onChange={(e) => setNameChange(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') handleRename();
+              if (e.key === 'Enter') handleRename(e);
             }}
           />
         )}
         <div className={style.buttons}>
-            <img src={settingsSvg} alt="Setting icon" />
+          <img src={settingsSvg} alt="Setting icon" onClick={() => setSpecs((prev) => !prev)} />
+          {specs && (
+            <div className={style.specsBg}>
+              <div className={style.specsWndw}>
+                <h2>{name}</h2>
+                <p>Creation Date: {createdAt}</p>
+                <p>Owner: {owner}</p>
+                <Button value="Back" onClick={() => setSpecs((prev) => !prev)} />
+                <Button value="Delete folder" onClick={handleDeleted} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
