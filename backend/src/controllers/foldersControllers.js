@@ -2,10 +2,7 @@ const { prisma } = require("../../lib/prisma.js");
 
 const postCreateFolder = async (req, res) => {
   try {
-    const { name } = req.body.data;
-    const { parentId } = parseInt(req.body, 10);
-
-    console.log(name)
+    const { name, parentId } = req.body.data;
 
     if (!name || !name.trim()) {
       return res
@@ -23,10 +20,6 @@ const postCreateFolder = async (req, res) => {
           .json({ error: `Error: Parent folder not found.` });
       }
     }
-
-    console.log(Object.keys(prisma));
-    console.log(prisma.folder);
-    console.log(prisma)
 
     const folder = await prisma.folder.create({
       data: {
@@ -124,7 +117,7 @@ const postUpdateFolder = async (req, res) => {
     const id = parseInt(req.params.id);
     const { name, parentId } = req.body;
 
-    console.log(name, parentId)
+    console.log(name, parentId);
 
     const folder = await prisma.folder.findUnique({
       where: { id: id },
