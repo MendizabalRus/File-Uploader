@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import style from '../../style/Home.module.css';
 
 // files
-import Folder from '../utils/page utils/Folder.jsx';
+import ExplorerItem from '../utils/page utils/ExplorerItem.jsx';
 
 const Home = () => {
   const [files, setFiles] = useState([]);
@@ -34,7 +34,8 @@ const Home = () => {
       <h1>Recent archives</h1>
       <div className={style.content}>
         {folders.map((folder) => (
-          <Folder
+          <ExplorerItem
+            type="folder"
             key={folder.id}
             name={folder.name}
             owner={folder.owner.firstname + ' ' + folder.owner.lastname}
@@ -44,9 +45,17 @@ const Home = () => {
             onDoubleClick={() => navigate(`/folders/${folder.id}`)}
           />
         ))}
-        {files.map((file) => {
-          return (<h3 key={file.id}>{file.originalName}</h3>)
-        })}
+        {files.map((file) => (
+          <ExplorerItem
+            type="file"
+            key={file.id}
+            name={file.originalName}
+            owner={file.owner.firstname + " " + file.owner.lastname}
+            createdAt={file.createdAt}
+            id={file.id}
+            parentId={file.parentId}
+          />
+        ))}
       </div>
     </section>
   );

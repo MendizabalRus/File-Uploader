@@ -6,7 +6,7 @@ import { useParams, useNavigate } from 'react-router';
 // Style
 
 // Files
-import Folder from '../utils/page utils/Folder.jsx';
+import ExplorerItem from '../utils/page utils/ExplorerItem.jsx';
 
 const FolderPage = () => {
   const { folderId } = useParams();
@@ -39,7 +39,8 @@ const FolderPage = () => {
     <div>
       {folders.map((folder) => {
         return (
-          <Folder
+          <ExplorerItem
+            type="folder"
             key={folder.id}
             name={folder.name}
             owner={folder.owner.firstname + ' ' + folder.owner.lastname}

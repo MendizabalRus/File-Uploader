@@ -1,16 +1,20 @@
 // packages
 import { useState, useEffect, useRef } from 'react';
 
+import PropTypes from 'prop-types';
+
 // style
-import style from '../../../style/Folder.module.css';
+import style from '../../../style/ExplorerItem.module.css';
 
 //files
 import folderSvg from '../../../assets/folder.svg';
+import fileSvg from '../../../assets/file.svg';
 import settingsSvg from '../../../assets/settings.svg';
 
 import Button from './Button.jsx';
 
-const Folder = ({
+const ExplorerItem = ({
+  type,
   name,
   owner,
   createdAt,
@@ -19,35 +23,41 @@ const Folder = ({
   onClick,
   onDoubleClick,
 }) => {
-  // Change the folder's name from text to input.
-  const [input, setInput] = useState(false);
+  // useState hooks
+  const [input, setInput] = useState(false); // Change the folder's name from text to input.
 
-  // Save the name of the folder typed in the input (passed folder name prop as default).
-  const [nameChange, setNameChange] = useState(name);
+  const [nameChange, setNameChange] = useState(name); // Save the name of the folder typed in the input (passed folder name prop as default).
 
-  // Open and close specs window.
-  const [specs, setSpecs] = useState(false);
+  const [specs, setSpecs] = useState(false); // Open and close specs window.
 
-  // set ref for input
-  const inputRef = useRef(null);
+  // useRef hooks
+  const inputRef = useRef(null); // set ref for input
 
-  // Petition to the server to rename the folder
+  const isFolder = type === 'folder';
+
+  // Endpoints
+  const updateEndpoint = isFolder
+    ? `http://localhost:8080/api/folders/update/folder${id}`
+    : `http://localhost:8080/api/files/update${id}`;
+
+  const deleteEndpoint = isFolder
+    ? `http://localhost:8080/api/folders/delete/folder${id}`
+    : `http://localhost:8080/api/files/delete/${id}`;
+
+  // Petition to the server to rename the item
   const handleRename = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/folders/update/folder${id}`,
-        {
-          credentials: 'include',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: nameChange,
-            parentId,
-          }),
+      const response = await fetch(updateEndpoint, {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({
+          name: nameChange,
+          parentId,
+        }),
+      });
       const result = await response.json();
       console.log(result);
     } catch (err) {
@@ -74,12 +84,12 @@ const Folder = ({
     };
   }, [input, nameChange]);
 
-  // Petition to the server to delete the folder.
+  // Petition to the server to delete the item.
   const handleDeleted = async () => {
     console.log('handle deleted');
     try {
       const response = await fetch(
-        `http://localhost:8080/api/folders/delete/folder${id}`,
+        deleteEndpoint,
         {
           method: 'POST',
           credentials: 'include',
@@ -106,11 +116,14 @@ const Folder = ({
       className={style.Folder}
       onDoubleClick={() => {
         if (!input) {
-          onDoubleClick()
+          onDoubleClick();
         }
       }}
     >
-      <img src={folderSvg} alt="Folder icon" />
+      <img
+        src={isFolder ? folderSvg : fileSvg}
+        alt={isFolder ? 'Folder icon' : 'File icon'}
+      />
       <div className={style.text}>
         {!input ? (
           <h3 onClick={() => setInput((prev) => !prev)}>{nameChange}</h3>
@@ -143,7 +156,7 @@ const Folder = ({
                   value="Back"
                   onClick={() => setSpecs((prev) => !prev)}
                 />
-                <Button value="Delete folder" onClick={handleDeleted} />
+                <Button value={isFolder ? "Delete folder" : "Delete file"} onClick={handleDeleted} />
               </div>
             </div>
           )}
@@ -152,4 +165,10 @@ const Folder = ({
     </div>
   );
 };
-export default Folder;
+
+ExplorerItem.propTypes = {
+  type: PropTypes.oneOf(['folder', 'file']).isRequired,
+  name: PropTypes.string.isRequired,
+};
+
+export default ExplorerItem;
