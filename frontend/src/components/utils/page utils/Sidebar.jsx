@@ -1,6 +1,6 @@
 // react & packages
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 
 // style
 import style from '../../../style/Sidebar.module.css';
@@ -16,12 +16,15 @@ const Sidebar = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const { folderId } = useParams()
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setError('');
     setSuccess('');
   };
 
+  // Petition to the api for uploading a file
   const handleFileSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,12 +58,14 @@ const Sidebar = () => {
     }
   };
 
+  // Petition to the api for creating a folder
   const handleCreateFolder = async (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
     const data = {
-      name: formData.get("name")
+      name: formData.get("name"),
+      parentId: parseInt(folderId),
     }
 
     console.log(data)

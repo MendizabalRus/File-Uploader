@@ -10,13 +10,24 @@ import settingsSvg from '../../../assets/settings.svg';
 
 import Button from './Button.jsx';
 
-const Folder = ({ name, owner, createdAt, id, parentId }) => {
+const Folder = ({
+  name,
+  owner,
+  createdAt,
+  id,
+  parentId,
+  onClick,
+  onDoubleClick,
+}) => {
   // Change the folder's name from text to input.
   const [input, setInput] = useState(false);
+
   // Save the name of the folder typed in the input (passed folder name prop as default).
   const [nameChange, setNameChange] = useState(name);
+
   // Open and close specs window.
   const [specs, setSpecs] = useState(false);
+
   // set ref for input
   const inputRef = useRef(null);
 
@@ -90,7 +101,15 @@ const Folder = ({ name, owner, createdAt, id, parentId }) => {
   };
 
   return (
-    <div className={style.Folder}>
+    <div
+      onClick={onClick}
+      className={style.Folder}
+      onDoubleClick={() => {
+        if (!input) {
+          onDoubleClick()
+        }
+      }}
+    >
       <img src={folderSvg} alt="Folder icon" />
       <div className={style.text}>
         {!input ? (
@@ -116,8 +135,10 @@ const Folder = ({ name, owner, createdAt, id, parentId }) => {
             <div className={style.specsBg}>
               <div className={style.specsWndw}>
                 <h2>{name}</h2>
-                <p>Owner: {owner}</p>
-                <p>Creation Date: {createdAt}</p>
+                <div>
+                  <p>Owner: {owner}</p>
+                  <p>Creation Date: {createdAt}</p>
+                </div>
                 <Button
                   value="Back"
                   onClick={() => setSpecs((prev) => !prev)}

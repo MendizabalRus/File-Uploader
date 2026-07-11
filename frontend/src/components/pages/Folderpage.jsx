@@ -1,41 +1,43 @@
-// react & packages
+// Packages
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
 
-// style
-import style from '../../style/Home.module.css';
+import { useParams, useNavigate } from 'react-router';
 
-// files
+// Style
+
+// Files
 import Folder from '../utils/page utils/Folder.jsx';
 
-const Home = () => {
-  const [files, setFiles] = useState([]);
+const FolderPage = () => {
+  const { folderId } = useParams();
+
   const [folders, setFolders] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const content = async () => {
-      const response = await fetch('http://localhost:8080/api/folders/root', {
-        credentials: 'include',
-      });
+    const getContent = async () => {
+      const response = await fetch(
+        `http://localhost:8080/api/folders/${folderId}`,
+        {
+          credentials: 'include',
+        },
+      );
 
       const data = await response.json();
 
       setFolders(data.folders);
       setFiles(data.files);
+      console.log(data);
     };
-
-    content();
-  }, []);
-
-  console.log(folders);
+    getContent();
+  }, [folderId]);
 
   return (
-    <section className={style.home}>
-      <h1>Recent archives</h1>
-      <div className={style.content}>
-        {folders.map((folder) => (
+    <div>
+      {folders.map((folder) => {
+        return (
           <Folder
             key={folder.id}
             name={folder.name}
@@ -45,9 +47,9 @@ const Home = () => {
             parentId={folder.parentId}
             onDoubleClick={() => navigate(`/folders/${folder.id}`)}
           />
-        ))}
-      </div>
-    </section>
+        );
+      })}
+    </div>
   );
 };
-export default Home;
+export default FolderPage;
