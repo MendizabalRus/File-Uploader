@@ -2,7 +2,7 @@
 const path = require("node:path");
 const { prisma } = require("../../lib/prisma.js");
 
-const postFile = async (req, res) => {
+const postUploadFile = async (req, res) => {
   try {
     if (!req.file) {
       return res
@@ -12,7 +12,8 @@ const postFile = async (req, res) => {
 
     const { folderId } = req.params;
 
-    const parentId = folderId && folderId !== "root" ? parseInt(folderId, 10) : null;
+    const parentId =
+      folderId && folderId !== "root" ? parseInt(folderId, 10) : null;
 
     const file = await prisma.file.create({
       data: {
@@ -48,6 +49,49 @@ const postFile = async (req, res) => {
   }
 };
 
+const postUpdateFile = async (req, res) => {
+  try {
+    const { id, name } = req.body;
+
+    const file = await prisma.file.update({
+      where: { id: id },
+    });
+
+    if (!file || file.ownerId === req.user.id) {
+      return res.status(404).json({ error: "File was not found." });
+    }
+
+    const update = await prisma.file.update({
+      where: { id: id },
+      data: {
+        ...(name !== undefined && name.trim()),
+      },
+    });
+
+    res.json(update);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Could not update file" });
+  }
+};
+
+const postDeleteFile = async (req, res) => {
+  try {
+    const id = req.body.id;
+
+    const file = await prisma.file.delete({
+      where: { id: id }
+    })
+
+    return res.status(401).json({ message: "File deleted successfully."})
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ error: "Could not delete file." })
+  }
+}
+
 module.exports = {
-  postFile,
+  postUploadFile,
+  postUpdateFile,
+  postDeleteFile,
 };
