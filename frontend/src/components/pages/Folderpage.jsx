@@ -29,10 +29,11 @@ const FolderPage = () => {
 
       setFolders(data.folders);
       setFiles(data.files);
-      console.log(data);
     };
     getContent();
   }, [folderId]);
+
+  console.log(files)
 
   return (
     <div>
@@ -48,6 +49,9 @@ const FolderPage = () => {
             onDoubleClick={() => navigate(`/folders/${folder.id}`)}
           />
         );
+      })}
+      {files.map((file) => {
+        return <h3 key={file.id}>{file.originalName}</h3>
       })}
     </div>
   );

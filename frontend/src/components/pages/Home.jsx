@@ -29,8 +29,6 @@ const Home = () => {
     content();
   }, []);
 
-  console.log(folders);
-
   return (
     <section className={style.home}>
       <h1>Recent archives</h1>
@@ -46,6 +44,9 @@ const Home = () => {
             onDoubleClick={() => navigate(`/folders/${folder.id}`)}
           />
         ))}
+        {files.map((file) => {
+          return (<h3 key={file.id}>{file.originalName}</h3>)
+        })}
       </div>
     </section>
   );

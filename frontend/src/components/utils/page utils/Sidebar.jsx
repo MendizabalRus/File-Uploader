@@ -24,9 +24,13 @@ const Sidebar = () => {
     setSuccess('');
   };
 
+  const currentFolder = folderId ?? "root";
+
   // Petition to the api for uploading a file
   const handleFileSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("Reached handleFileSubmit, file:", file)
 
     if (!file) {
       setError('Please select a file');
@@ -35,8 +39,10 @@ const Sidebar = () => {
     const formData = new FormData();
     formData.append('file', file);
 
+    console.log(formData)
+
     try {
-      const response = await fetch('http://localhost:8080/api/files/upload', {
+      const response = await fetch(`http://localhost:8080/api/files/upload/${currentFolder}`, {
         method: 'POST',
         credentials: 'include',
         body: formData,
@@ -68,7 +74,6 @@ const Sidebar = () => {
       parentId: parseInt(folderId),
     }
 
-    console.log(data)
     try {
       const response = await fetch('http://localhost:8080/api/folders/create', {
         method: 'POST',
