@@ -55,15 +55,23 @@
 }
 
 .buttons > img{
-    width: 20px;
-    height: auto;
+  width: 20px;
+  height: auto;
 
-    padding: 2px;
+  padding: 2px;
 
-    border: 1px solid white;
-    border-radius: 2px;
+  border: 1px solid white;
+  border-radius: 2px;
 
-    filter: contrast(0) brightness(10);
+  filter: contrast(0) brightness(10);
+}
+
+.favorite {
+  filter: brightness(0) saturate(100%) invert(93%) sepia(56%) saturate(5154%) hue-rotate(8deg) brightness(104%) contrast(108%);
+}
+
+.unfavorite {
+  filter: contrast(0);
 }
 
 /*

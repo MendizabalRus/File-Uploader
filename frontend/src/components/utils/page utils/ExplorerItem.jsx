@@ -10,14 +10,15 @@ import style from '../../../style/ExplorerItem.module.css';
 import folderSvg from '../../../assets/folder.svg';
 import fileSvg from '../../../assets/file.svg';
 import settingsSvg from '../../../assets/settings.svg';
+import starSvg from '../../../assets/star.svg';
+import fullstarSvg from "../../../assets/fullstar.svg";
 
 import Button from './Button.jsx';
 
 const ExplorerItem = ({ type, item, onDoubleClick }) => {
   const isFolder = type === 'folder';
 
-  const { id, name, owner, createdAt, updatedAt, parentId, size } =
-    item;
+  const { id, name, owner, createdAt, updatedAt, parentId, size, favorite } = item;
 
   // useState hooks
   const [input, setInput] = useState(false); // Change the folder's name from text to input.
@@ -25,6 +26,8 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
   const [nameChange, setNameChange] = useState(name); // Save the name of the folder typed in the input (passed folder name prop as default).
 
   const [specs, setSpecs] = useState(false); // Open and close specs window.
+
+  const [isFavorite, setIsFavorite] = useState(favorite); // Toggle an item as favorite
 
   // useRef hooks
   const inputRef = useRef(null); // set ref for input
@@ -37,6 +40,14 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
   const deleteEndpoint = isFolder
     ? `http://localhost:8080/api/folders/delete/${id}`
     : `http://localhost:8080/api/files/delete/${id}`;
+
+  const favoriteEndpoint = isFolder
+    ? `http://localhost:8080/api/favorites/update/folders/${id}`
+    : `http://localhost:8080/api/favorites/update/files/${id}`;
+
+  const unfavoriteEndpoint = isFolder
+    ? `http://localhost:8080/api/favorites/delete/folders/${id}`
+    : `http://localhost:8080/api/favorites/delete/files/${id}`;
 
   // Petition to the server to rename the item
   const handleRename = async () => {
@@ -101,6 +112,42 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
     setSpecs((prev) => !prev);
   };
 
+  const handleFavorite = async () => {
+    try {
+      const response = await fetch(favoriteEndpoint, {
+        method: "POST",
+        credentials: 'include',
+      });
+
+      const result = await response.text();
+      console.log(result);
+      if (response.ok) {
+        setIsFavorite((prev) => !prev);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUnfavorite = async () => {
+    try {
+      const response = await fetch(unfavoriteEndpoint, {
+        method: "POST",
+        credentials: 'include',
+      });
+
+      const result = await response.text();
+      console.log(result);
+
+      if (response.ok) {
+        setIsFavorite((prev) => !prev);
+      }
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div
       onDoubleClick={() => {
@@ -134,17 +181,26 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
             alt="Setting icon"
             onClick={() => setSpecs((prev) => !prev)}
           />
+          <img
+            src={isFavorite ? fullstarSvg : starSvg}
+            alt="Star icon"
+            onClick={isFavorite ? handleUnfavorite : handleFavorite}
+            className={`${isFavorite ? style.favorite : style.unfavorite}`}
+          />
           {specs && (
             <div className={style.specsBg}>
               <div className={style.specsWndw}>
-                <img src={isFolder ? folderSvg : fileSvg} alt={isFolder ? "Folder icon" : "File icon"} />
+                <img
+                  src={isFolder ? folderSvg : fileSvg}
+                  alt={isFolder ? 'Folder icon' : 'File icon'}
+                />
                 <h2>{name}</h2>
                 <div>
-                  <p>Owner: {owner.firstname + " " + owner.lastname}</p>
+                  <p>Owner: {owner.firstname + ' ' + owner.lastname}</p>
                   {!isFolder && <p>Size (mb): {size}</p>}
                   <p>Creation date: {createdAt}</p>
                   <p>Last update: {updatedAt}</p>
-                  <p>Parent ID: {parentId === undefined ? "none" : parentId}</p>
+                  <p>Parent ID: {parentId === undefined ? 'none' : parentId}</p>
                 </div>
                 <Button
                   value="Back"
@@ -165,7 +221,7 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
 
 ExplorerItem.propTypes = {
   type: PropTypes.oneOf(['folder', 'file']).isRequired,
-  name: PropTypes.string.isRequired,
+  item: PropTypes.object.isRequired,
 };
 
 export default ExplorerItem;

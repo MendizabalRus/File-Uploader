@@ -8,7 +8,7 @@ import style from '../../style/Explorer.module.css';
 // Files
 import ExplorerItem from '../utils/page utils/ExplorerItem';
 
-const Explorer = () => {
+const Explorer = ({ mode }) => {
   // useState hooks
   const [folders, setFolders] = useState([]); // Save the folders fetched from the API in the folders state hook.
   const [files, setFiles] = useState([]); // Save the folders fetched from the API in the files state hook.
@@ -24,13 +24,24 @@ const Explorer = () => {
   // Fetch folders (and it's items) from the API.
   useEffect(() => {
     const getExplorerItems = async () => {
-      const endpoint = currentFolderId === null ? 'root' : currentFolderId;
-      const response = await fetch(
-        `http://localhost:8080/api/folders/${endpoint}`,
-        {
-          credentials: 'include',
-        },
-      );
+      let endpoint;
+
+      switch (mode) {
+        case 'favorites':
+          endpoint = 'http://localhost:8080/api/favorites';
+          break;
+
+        case 'folders':
+          endpoint = `http://localhost:8080/api/folders/${currentFolderId}`;
+          break;
+
+        default:
+          endpoint = 'http://localhost:8080/api/folders/root';
+      }
+
+      const response = await fetch(endpoint, {
+        credentials: 'include',
+      });
 
       const data = await response.json();
 
@@ -62,13 +73,7 @@ const Explorer = () => {
         <h2 className={style.sectionHeader}>Files</h2>
         <div className={style.sectionItems}>
           {files.map((file) => {
-            return (
-              <ExplorerItem
-                key={file.id}
-                type="file"
-                item={file}
-              />
-            );
+            return <ExplorerItem key={file.id} type="file" item={file} />;
           })}
         </div>
       </section>
