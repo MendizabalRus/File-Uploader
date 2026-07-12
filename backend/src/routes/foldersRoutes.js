@@ -6,7 +6,7 @@ const foldersControllers = require("../controllers/foldersControllers.js");
 
 foldersRoutes.post("/create", ensureAuthenticated, foldersControllers.postCreateFolder);
 foldersRoutes.get("/:folderId", ensureAuthenticated, foldersControllers.getFolder);
-foldersRoutes.post("/update/folder:id", ensureAuthenticated, foldersControllers.postUpdateFolder);
-foldersRoutes.post("/delete/folder:id", ensureAuthenticated, foldersControllers.postDeleteFolder);
+foldersRoutes.post("/update/:folderId", ensureAuthenticated, foldersControllers.postUpdateFolder);
+foldersRoutes.post("/delete/:folderId", ensureAuthenticated, foldersControllers.postDeleteFolder);
 
 module.exports = foldersRoutes;
