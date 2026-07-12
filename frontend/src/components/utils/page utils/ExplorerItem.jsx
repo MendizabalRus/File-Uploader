@@ -31,11 +31,11 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
 
   // Endpoints
   const updateEndpoint = isFolder
-    ? `http://localhost:8080/api/folders/update/folder${id}`
+    ? `http://localhost:8080/api/folders/update/${id}`
     : `http://localhost:8080/api/files/update/${id}`;
 
   const deleteEndpoint = isFolder
-    ? `http://localhost:8080/api/folders/delete/folder${id}`
+    ? `http://localhost:8080/api/folders/delete/${id}`
     : `http://localhost:8080/api/files/delete/${id}`;
 
   // Petition to the server to rename the item
