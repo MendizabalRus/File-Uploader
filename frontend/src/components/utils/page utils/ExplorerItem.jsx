@@ -13,16 +13,12 @@ import settingsSvg from '../../../assets/settings.svg';
 
 import Button from './Button.jsx';
 
-const ExplorerItem = ({
-  type,
-  name,
-  owner,
-  createdAt,
-  id,
-  parentId,
-  onClick,
-  onDoubleClick,
-}) => {
+const ExplorerItem = ({ type, item, onDoubleClick }) => {
+  const isFolder = type === 'folder';
+
+  const { id, name, owner, createdAt, updatedAt, parentId, size } =
+    item;
+
   // useState hooks
   const [input, setInput] = useState(false); // Change the folder's name from text to input.
 
@@ -32,8 +28,6 @@ const ExplorerItem = ({
 
   // useRef hooks
   const inputRef = useRef(null); // set ref for input
-
-  const isFolder = type === 'folder';
 
   // Endpoints
   const updateEndpoint = isFolder
@@ -109,7 +103,6 @@ const ExplorerItem = ({
 
   return (
     <div
-      onClick={onClick}
       onDoubleClick={() => {
         if (!input) {
           onDoubleClick();
@@ -144,10 +137,14 @@ const ExplorerItem = ({
           {specs && (
             <div className={style.specsBg}>
               <div className={style.specsWndw}>
+                <img src={isFolder ? folderSvg : fileSvg} alt={isFolder ? "Folder icon" : "File icon"} />
                 <h2>{name}</h2>
                 <div>
-                  <p>Owner: {owner}</p>
-                  <p>Creation Date: {createdAt}</p>
+                  <p>Owner: {owner.firstname + " " + owner.lastname}</p>
+                  {!isFolder && <p>Size (mb): {size}</p>}
+                  <p>Creation date: {createdAt}</p>
+                  <p>Last update: {updatedAt}</p>
+                  <p>Parent ID: {parentId === undefined ? "none" : parentId}</p>
                 </div>
                 <Button
                   value="Back"

@@ -51,13 +51,7 @@ const Explorer = () => {
               <ExplorerItem
                 key={folder.id}
                 type="folder"
-                name={folder.name}
-                owner={folder.owner.firstname + " " + folder.owner.lastname}
-                ownerId={folder.ownerId}
-                parentId ={folder.parentId}
-                createdAt={folder.createdAt}
-                updatedAt={folder.updatedAt}
-                id={folder.id}
+                item={folder}
                 onDoubleClick={() => navigate(`/folders/${folder.id}`)}
               />
             );
@@ -72,14 +66,7 @@ const Explorer = () => {
               <ExplorerItem
                 key={file.id}
                 type="file"
-                name={file.originalName}
-                owner={file.owner.firstname + " " + file.owner.lastname}
-                ownerId={file.ownerId}
-                mimeType={file.mimeType}
-                size={file.size}
-                createdAt={file.createdAt}
-                updatedAt={file.updatedAt}
-                id={file.id}
+                item={file}
               />
             );
           })}
