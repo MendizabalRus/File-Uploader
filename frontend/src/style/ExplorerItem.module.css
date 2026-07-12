@@ -1,4 +1,4 @@
-.Folder {
+.ExplorerItem {
   width: 130px;
 
   display: flex;
@@ -21,31 +21,31 @@
   cursor: pointer;
 }
 
-.Folder:hover {
+.ExplorerItem:hover {
   outline-offset: 3px;
 
   background-color: rgba(0, 123, 255, 0.5);
 }
 
-.Folder > img {
+.ExplorerItem > img {
   width: 50px;
   height: auto;
 
   filter: contrast(0) brightness(10);
 }
 
-.text {
+.name {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.text h3 {
+.name h3 {
   font-weight: 600;
   text-align: center;
 }
 
-.text h3:hover {
+.name h3:hover {
     text-decoration: underline;
 }
 

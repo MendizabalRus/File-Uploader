@@ -1,12 +1,15 @@
+// Authentication related routes
 import AuthLayout from './layouts/AuthLayout.jsx';
 import Register from './pages/Register.jsx';
 import LogIn from './pages/LogIn.jsx';
 
+// 
 import ProtectedRoute from './ProtectedRoute.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
-import Home from './pages/Home.jsx';
-import FolderPage from './pages/Folderpage.jsx';
-// to be added: shared, favorites, folder/folderId...
+import Explorer from "./pages/Explorer.jsx";
+// import Favorites from "./pages/Favorites.jsx";
+// import Shared from "./pages/Shared.jsx";
+
 
 import ErrorPage from './pages/ErrorPage.jsx';
 
@@ -34,11 +37,11 @@ const routes = [
         children: [
           {
             index: true,
-            element: <Home />,
+            element: <Explorer />,
           },
           {
             path: "folders/:folderId",
-            element: <FolderPage />
+            element: <Explorer />
           }
         ],
       },

@@ -38,7 +38,7 @@ const ExplorerItem = ({
   // Endpoints
   const updateEndpoint = isFolder
     ? `http://localhost:8080/api/folders/update/folder${id}`
-    : `http://localhost:8080/api/files/update${id}`;
+    : `http://localhost:8080/api/files/update/${id}`;
 
   const deleteEndpoint = isFolder
     ? `http://localhost:8080/api/folders/delete/folder${id}`
@@ -88,19 +88,16 @@ const ExplorerItem = ({
   const handleDeleted = async () => {
     console.log('handle deleted');
     try {
-      const response = await fetch(
-        deleteEndpoint,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: id,
-          }),
+      const response = await fetch(deleteEndpoint, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({
+          id: id,
+        }),
+      });
 
       const result = await response.text();
       console.log(result);
@@ -113,18 +110,18 @@ const ExplorerItem = ({
   return (
     <div
       onClick={onClick}
-      className={style.Folder}
       onDoubleClick={() => {
         if (!input) {
           onDoubleClick();
         }
       }}
+      className={style.ExplorerItem}
     >
       <img
         src={isFolder ? folderSvg : fileSvg}
         alt={isFolder ? 'Folder icon' : 'File icon'}
       />
-      <div className={style.text}>
+      <div className={style.name}>
         {!input ? (
           <h3 onClick={() => setInput((prev) => !prev)}>{nameChange}</h3>
         ) : (
@@ -156,7 +153,10 @@ const ExplorerItem = ({
                   value="Back"
                   onClick={() => setSpecs((prev) => !prev)}
                 />
-                <Button value={isFolder ? "Delete folder" : "Delete file"} onClick={handleDeleted} />
+                <Button
+                  value={isFolder ? 'Delete folder' : 'Delete file'}
+                  onClick={handleDeleted}
+                />
               </div>
             </div>
           )}
