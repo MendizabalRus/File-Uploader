@@ -51,20 +51,21 @@ const postUploadFile = async (req, res) => {
 
 const postUpdateFile = async (req, res) => {
   try {
-    const { id, name } = req.body;
+    const id = parseInt(req.params.fileId, 10);
+    const { name } = req.body;
 
-    const file = await prisma.file.update({
+    const file = await prisma.file.findUnique({
       where: { id: id },
     });
 
-    if (!file || file.ownerId === req.user.id) {
+    if (!file || file.ownerId !== req.user.id) {
       return res.status(404).json({ error: "File was not found." });
     }
 
     const update = await prisma.file.update({
       where: { id: id },
       data: {
-        ...(name !== undefined && name.trim()),
+        ...(name !== undefined && { originalName: name.trim() }),
       },
     });
 
@@ -78,6 +79,8 @@ const postUpdateFile = async (req, res) => {
 const postDeleteFile = async (req, res) => {
   try {
     const id = req.body.id;
+
+    console.log("Post delete files", id)
 
     const file = await prisma.file.delete({
       where: { id: id }

@@ -117,6 +117,8 @@ const postUpdateFolder = async (req, res) => {
     const id = parseInt(req.params.id);
     const { name, parentId } = req.body;
 
+    console.log("Post update folder" ,id, name, parentId)
+
     console.log(name, parentId);
 
     const folder = await prisma.folder.findUnique({
@@ -180,6 +182,8 @@ const isFolderDescendant = async (candidateId, folderId) => {
 const postDeleteFolder = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+
+    console.log("Post delete folder", id)
 
     const folder = await prisma.folder.findUnique({
       where: { id: id },
