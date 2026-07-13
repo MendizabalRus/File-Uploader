@@ -24,7 +24,7 @@ const Explorer = ({ mode }) => {
   // Fetch folders (and it's items) from the API.
   useEffect(() => {
     const fetchData = async () => {
-      const id = folderId ?? "root";
+      const id = folderId ?? 'root';
       try {
         const data =
           mode === 'favorites' ? await getFavorites() : await getFolder(id);
@@ -39,7 +39,7 @@ const Explorer = ({ mode }) => {
     fetchData();
   }, [mode, folderId]);
 
-  console.log(files)
+  console.log(files);
 
   return (
     <div className={style.Explorer}>
@@ -53,6 +53,9 @@ const Explorer = ({ mode }) => {
                 type="folder"
                 item={folder}
                 onDoubleClick={() => navigate(`/folders/${folder.id}`)}
+                onDelete={(id) =>
+                  setFolders((prev) => prev.filter((folder) => folder.id !== id))
+                }
               />
             );
           })}
@@ -62,7 +65,16 @@ const Explorer = ({ mode }) => {
         <h2 className={style.sectionHeader}>Files</h2>
         <div className={style.sectionItems}>
           {files.map((file) => {
-            return <ExplorerItem key={file.id} type="file" item={file} />;
+            return (
+              <ExplorerItem
+                key={file.id}
+                type="file"
+                item={file}
+                onDelete={(id) =>
+                  setFiles((prev) => prev.filter((file) => file.id !== id))
+                }
+              />
+            );
           })}
         </div>
       </section>

@@ -21,7 +21,7 @@ import {
   toggleFavorite,
 } from '../../../api/ExplorerItemActions.js';
 
-const ExplorerItem = ({ type, item, onDoubleClick }) => {
+const ExplorerItem = ({ type, item, onDoubleClick, onDelete }) => {
   const isFolder = type === 'folder';
 
   const { id, name, originalName, owner, createdAt, updatedAt, parentId, size, favorite } =
@@ -75,7 +75,7 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
   const handleDeleted = async () => {
     try {
       await deleteItem(type, id);
-
+      onDelete?.(id);
       setIsSpecsOpen(false);
     } catch (err) {
       console.error(err);
@@ -167,7 +167,8 @@ ExplorerItem.propTypes = {
   type: PropTypes.oneOf(['folder', 'file']).isRequired,
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    originalName: PropTypes.string,
     owner: PropTypes.object,
     createdAt: PropTypes.string,
     updatedAt: PropTypes.string,
