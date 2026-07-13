@@ -24,13 +24,13 @@ import {
 const ExplorerItem = ({ type, item, onDoubleClick }) => {
   const isFolder = type === 'folder';
 
-  const { id, name, owner, createdAt, updatedAt, parentId, size, favorite } =
+  const { id, name, originalName, owner, createdAt, updatedAt, parentId, size, favorite } =
     item;
 
   // useState hooks:
   const [isEditing, setIsEditing] = useState(false); // Change the folder's name from text to input.
 
-  const [nameChange, setNameChange] = useState(name); // Save the name of the folder typed in the input (passed folder name prop as default).
+  const [nameChange, setNameChange] = useState(name || originalName); // Save the name of the folder typed in the input (passed folder name prop as default).
 
   const [isSpecsOpen, setIsSpecsOpen] = useState(false); // Open and close specs window.
 
@@ -143,7 +143,7 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
                   <p>Owner: {owner.firstname + ' ' + owner.lastname}</p>
                   {!isFolder && <p>Size (mb): {size}</p>}
                   <p>Creation date: {createdAt}</p>
-                  <p>Last update: {updatedAt}</p>
+                  {isFolder && <p>Last update: {updatedAt}</p>}
                   <p>Parent ID: {parentId ?? 'none'}</p>
                 </div>
                 <Button

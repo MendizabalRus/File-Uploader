@@ -39,6 +39,8 @@ const Explorer = ({ mode }) => {
     fetchData();
   }, [mode, folderId]);
 
+  console.log(files)
+
   return (
     <div className={style.Explorer}>
       <section className={style.section}>
