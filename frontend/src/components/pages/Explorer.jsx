@@ -8,6 +8,8 @@ import style from '../../style/Explorer.module.css';
 // Files
 import ExplorerItem from '../utils/page utils/ExplorerItem';
 
+import { getFolder, getFavorites } from '../../api/ExplorerActions';
+
 const Explorer = ({ mode }) => {
   // useState hooks
   const [folders, setFolders] = useState([]); // Save the folders fetched from the API in the folders state hook.
@@ -19,38 +21,23 @@ const Explorer = ({ mode }) => {
   // useNavigate hook
   const navigate = useNavigate();
 
-  const currentFolderId = folderId ? parseInt(folderId, 10) : null;
-
   // Fetch folders (and it's items) from the API.
   useEffect(() => {
-    const getExplorerItems = async () => {
-      let endpoint;
+    const fetchData = async () => {
+      const id = folderId ?? "root";
+      try {
+        const data =
+          mode === 'favorites' ? await getFavorites() : await getFolder(id);
 
-      switch (mode) {
-        case 'favorites':
-          endpoint = 'http://localhost:8080/api/favorites';
-          break;
-
-        case 'folders':
-          endpoint = `http://localhost:8080/api/folders/${currentFolderId}`;
-          break;
-
-        default:
-          endpoint = 'http://localhost:8080/api/folders/root';
+        setFolders(data.folders);
+        setFiles(data.files);
+      } catch (err) {
+        console.error(err);
       }
-
-      const response = await fetch(endpoint, {
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-
-      setFolders(data.folders);
-      setFiles(data.files);
     };
 
-    getExplorerItems();
-  }, [currentFolderId]);
+    fetchData();
+  }, [mode, folderId]);
 
   return (
     <div className={style.Explorer}>

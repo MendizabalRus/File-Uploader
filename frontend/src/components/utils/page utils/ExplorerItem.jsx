@@ -11,70 +11,51 @@ import folderSvg from '../../../assets/folder.svg';
 import fileSvg from '../../../assets/file.svg';
 import settingsSvg from '../../../assets/settings.svg';
 import starSvg from '../../../assets/star.svg';
-import fullstarSvg from "../../../assets/fullstar.svg";
+import fullstarSvg from '../../../assets/fullstar.svg';
 
 import Button from './Button.jsx';
+
+import {
+  renameItem,
+  deleteItem,
+  toggleFavorite,
+} from '../../../api/ExplorerItemActions.js';
 
 const ExplorerItem = ({ type, item, onDoubleClick }) => {
   const isFolder = type === 'folder';
 
-  const { id, name, owner, createdAt, updatedAt, parentId, size, favorite } = item;
+  const { id, name, owner, createdAt, updatedAt, parentId, size, favorite } =
+    item;
 
-  // useState hooks
-  const [input, setInput] = useState(false); // Change the folder's name from text to input.
+  // useState hooks:
+  const [isEditing, setIsEditing] = useState(false); // Change the folder's name from text to input.
 
   const [nameChange, setNameChange] = useState(name); // Save the name of the folder typed in the input (passed folder name prop as default).
 
-  const [specs, setSpecs] = useState(false); // Open and close specs window.
+  const [isSpecsOpen, setIsSpecsOpen] = useState(false); // Open and close specs window.
 
   const [isFavorite, setIsFavorite] = useState(favorite); // Toggle an item as favorite
 
-  // useRef hooks
-  const inputRef = useRef(null); // set ref for input
+  // useRef hooks:
+  const inputRef = useRef(null); // set ref for input.
 
-  // Endpoints
-  const updateEndpoint = isFolder
-    ? `http://localhost:8080/api/folders/update/${id}`
-    : `http://localhost:8080/api/files/update/${id}`;
-
-  const deleteEndpoint = isFolder
-    ? `http://localhost:8080/api/folders/delete/${id}`
-    : `http://localhost:8080/api/files/delete/${id}`;
-
-  const favoriteEndpoint = isFolder
-    ? `http://localhost:8080/api/favorites/update/folders/${id}`
-    : `http://localhost:8080/api/favorites/update/files/${id}`;
-
-  const unfavoriteEndpoint = isFolder
-    ? `http://localhost:8080/api/favorites/delete/folders/${id}`
-    : `http://localhost:8080/api/favorites/delete/files/${id}`;
-
-  // Petition to the server to rename the item
+  // Petition to the server to rename the item.
   const handleRename = async () => {
     try {
-      const response = await fetch(updateEndpoint, {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: nameChange,
-          parentId,
-        }),
+      await renameItem(type, id, {
+        name: nameChange,
+        parentId,
       });
-      const result = await response.json();
-      console.log(result);
+
+      setIsEditing(false);
     } catch (err) {
       console.error(err);
     }
-
-    setInput((prev) => !prev);
   };
 
-  // Close input mode when clicking outside it
+  // Close input mode when clicking outside it.
   useEffect(() => {
-    if (!input) return;
+    if (!isEditing) return;
 
     const handleClickOutside = (e) => {
       if (inputRef.current && !inputRef.current.contains(e.target)) {
@@ -87,62 +68,26 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [input, nameChange]);
+    // eslint-disable-next-line
+  }, [isEditing, nameChange]);
 
   // Petition to the server to delete the item.
   const handleDeleted = async () => {
-    console.log('handle deleted');
     try {
-      const response = await fetch(deleteEndpoint, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: id,
-        }),
-      });
+      await deleteItem(type, id);
 
-      const result = await response.text();
-      console.log(result);
-    } catch (err) {
-      console.error(err);
-    }
-    setSpecs((prev) => !prev);
-  };
-
-  const handleFavorite = async () => {
-    try {
-      const response = await fetch(favoriteEndpoint, {
-        method: "POST",
-        credentials: 'include',
-      });
-
-      const result = await response.text();
-      console.log(result);
-      if (response.ok) {
-        setIsFavorite((prev) => !prev);
-      }
+      setIsSpecsOpen(false);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleUnfavorite = async () => {
+  // Petition to the server to toggle between favoriting and unfavoriting items.
+  const handleToggleFavorite = async () => {
     try {
-      const response = await fetch(unfavoriteEndpoint, {
-        method: "POST",
-        credentials: 'include',
-      });
+      await toggleFavorite(type, id, isFavorite);
 
-      const result = await response.text();
-      console.log(result);
-
-      if (response.ok) {
-        setIsFavorite((prev) => !prev);
-      }
-
+      setIsFavorite((prev) => !prev);
     } catch (err) {
       console.error(err);
     }
@@ -151,9 +96,7 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
   return (
     <div
       onDoubleClick={() => {
-        if (!input) {
-          onDoubleClick();
-        }
+        onDoubleClick?.();
       }}
       className={style.ExplorerItem}
     >
@@ -162,8 +105,8 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
         alt={isFolder ? 'Folder icon' : 'File icon'}
       />
       <div className={style.name}>
-        {!input ? (
-          <h3 onClick={() => setInput((prev) => !prev)}>{nameChange}</h3>
+        {!isEditing ? (
+          <h3 onClick={() => setIsEditing((prev) => !prev)}>{nameChange}</h3>
         ) : (
           <input
             type="text"
@@ -179,32 +122,33 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
           <img
             src={settingsSvg}
             alt="Setting icon"
-            onClick={() => setSpecs((prev) => !prev)}
+            onClick={() => setIsSpecsOpen((prev) => !prev)}
           />
           <img
             src={isFavorite ? fullstarSvg : starSvg}
             alt="Star icon"
-            onClick={isFavorite ? handleUnfavorite : handleFavorite}
+            onClick={handleToggleFavorite}
             className={`${isFavorite ? style.favorite : style.unfavorite}`}
           />
-          {specs && (
+          {/* Items specifications modal */}
+          {isSpecsOpen && (
             <div className={style.specsBg}>
               <div className={style.specsWndw}>
                 <img
                   src={isFolder ? folderSvg : fileSvg}
                   alt={isFolder ? 'Folder icon' : 'File icon'}
                 />
-                <h2>{name}</h2>
+                <h2>{nameChange}</h2>
                 <div>
                   <p>Owner: {owner.firstname + ' ' + owner.lastname}</p>
                   {!isFolder && <p>Size (mb): {size}</p>}
                   <p>Creation date: {createdAt}</p>
                   <p>Last update: {updatedAt}</p>
-                  <p>Parent ID: {parentId === undefined ? 'none' : parentId}</p>
+                  <p>Parent ID: {parentId ?? 'none'}</p>
                 </div>
                 <Button
                   value="Back"
-                  onClick={() => setSpecs((prev) => !prev)}
+                  onClick={() => setIsSpecsOpen((prev) => !prev)}
                 />
                 <Button
                   value={isFolder ? 'Delete folder' : 'Delete file'}
@@ -221,7 +165,16 @@ const ExplorerItem = ({ type, item, onDoubleClick }) => {
 
 ExplorerItem.propTypes = {
   type: PropTypes.oneOf(['folder', 'file']).isRequired,
-  item: PropTypes.object.isRequired,
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    owner: PropTypes.object,
+    createdAt: PropTypes.string,
+    updatedAt: PropTypes.string,
+    parentId: PropTypes.number,
+    size: PropTypes.number,
+    favorite: PropTypes.bool,
+  }).isRequired,
 };
 
 export default ExplorerItem;
