@@ -78,20 +78,18 @@ const postUpdateFile = async (req, res) => {
 
 const postDeleteFile = async (req, res) => {
   try {
-    const id = req.body.id;
-
-    console.log("Post delete files", id)
+    const id = parseInt(req.params.fileId, 10);
 
     const file = await prisma.file.delete({
-      where: { id: id }
-    })
+      where: { id: id },
+    });
 
-    return res.status(401).json({ message: "File deleted successfully."})
+    return res.status(200).json({ message: "File deleted successfully." });
   } catch (err) {
-    console.error(err)
-    return res.status(500).json({ error: "Could not delete file." })
+    console.error(err);
+    return res.status(500).json({ error: "Could not delete file." });
   }
-}
+};
 
 module.exports = {
   postUploadFile,
