@@ -5,9 +5,7 @@ const postCreateFolder = async (req, res) => {
     const { name, parentId } = req.body.data;
 
     if (!name || !name.trim()) {
-      return res
-        .status(400)
-        .json({ error: `Error: Folder name is required.` });
+      return res.status(400).json({ error: `Error: Folder name is required.` });
     }
 
     if (parentId) {
@@ -37,9 +35,7 @@ const postCreateFolder = async (req, res) => {
       });
     }
     console.error(err);
-    return res
-      .status(500)
-      .json({ error: `Error: Could not create folder.` });
+    return res.status(500).json({ error: `Error: Could not create folder.` });
   }
 };
 
@@ -64,15 +60,13 @@ const getFolder = async (req, res) => {
             select: {
               firstname: true,
               lastname: true,
-            }
-          }
-        }
+            },
+          },
+        },
       });
 
       if (!folder || folder.ownerId !== req.user.id) {
-        return res
-          .status(404)
-          .json({ error: `Error: folder was not found.` });
+        return res.status(404).json({ error: `Error: folder was not found.` });
       }
     }
 
@@ -84,8 +78,13 @@ const getFolder = async (req, res) => {
             select: {
               firstname: true,
               lastname: true,
-            }
-          }
+            },
+          },
+          folderFavorites: {
+            where: {
+              userId: req.user.id,
+            },
+          },
         },
         orderBy: { name: "asc" },
       }),
@@ -96,14 +95,29 @@ const getFolder = async (req, res) => {
             select: {
               firstname: true,
               lastname: true,
-            }
-          }
+            },
+          },
+          fileFavorites: {
+            where: {
+              userId: req.user.id,
+            },
+          },
         },
         orderBy: { createdAt: "desc" },
       }),
     ]);
 
-    res.json({ folder, folders, files });
+    const formattedFolders = folders.map(({ folderFavorites, ...folder }) => ({
+      ...folder,
+      favorite: folderFavorites.length > 0,
+    }));
+
+    const formattedFiles = files.map(({ fileFavorites, ...file }) => ({
+      ...file,
+      favorite: fileFavorites.length > 0,
+    }));
+
+    res.json({ folder, folders: formattedFolders, files: formattedFiles });
   } catch (err) {
     console.error(err);
     return res
@@ -114,10 +128,10 @@ const getFolder = async (req, res) => {
 
 const postUpdateFolder = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.folderId, 10);
     const { name, parentId } = req.body;
 
-    console.log("Post update folder" ,id, name, parentId)
+    console.log("Post update folder", id, name, parentId);
 
     console.log(name, parentId);
 
@@ -126,9 +140,7 @@ const postUpdateFolder = async (req, res) => {
     });
 
     if (!folder || folder.ownerId !== req.user.id) {
-      return res
-        .status(404)
-        .json({ error: `Error: Folder was not found.` });
+      return res.status(404).json({ error: `Error: Folder was not found.` });
     }
     if (parentId) {
       if (parentId === id) {
@@ -162,9 +174,7 @@ const postUpdateFolder = async (req, res) => {
       });
     }
     console.error(err);
-    return res
-      .status(500)
-      .json({ error: `Error: could not update changes.` });
+    return res.status(500).json({ error: `Error: could not update changes.` });
   }
 };
 
@@ -181,9 +191,9 @@ const isFolderDescendant = async (candidateId, folderId) => {
 
 const postDeleteFolder = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.folderId, 10);
 
-    console.log("Post delete folder", id)
+    console.log("Post delete folder", id);
 
     const folder = await prisma.folder.findUnique({
       where: { id: id },
@@ -204,9 +214,7 @@ const postDeleteFolder = async (req, res) => {
     res.json({ message: "Folder deleted successfully!" });
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .json({ error: `Error: could not delete folder.` });
+    return res.status(500).json({ error: `Error: could not delete folder.` });
   }
 };
 
