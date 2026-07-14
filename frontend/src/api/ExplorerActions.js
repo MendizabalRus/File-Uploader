@@ -1,7 +1,6 @@
 const BASE_URL = 'http://localhost:8080/api';
 
 export const getFolder = async (folderId) => {
-  console.log(folderId);
   const response = await fetch(`${BASE_URL}/folders/${folderId}`, {
     credentials: 'include',
   });
